@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "es6", // Usa ES6 como versión de JavaScript de salida
+    "module": "EsNext", // Usa CommonJS para los módulos
+    "strict": true, // Habilita las verificaciones estrictas de tipo
+    "esModuleInterop": true, // Habilita la interoperabilidad con los módulos ES
+    "skipLibCheck": true, // Omite la comprobación de tipos de las bibliotecas
+    "outDir": "./dist", // El código transpilado irá a la carpeta "dist"
+    "baseUrl": "./src", // Configura la base de las rutas para resolver los archivos
+    "resolveJsonModule": true, // Permite importar archivos JSON
+    "jsx": "react", // Habilitar JSX en React
+    "moduleResolution": "node" // Resuelve módulos usando el sistema de Node.js
+  },
+  "include": ["src/**/*"], // Incluye todos los archivos en la carpeta "src"
+  "exclude": ["node_modules", "dist"] // Excluye las carpetas "node_modules" y "dist"
+}
