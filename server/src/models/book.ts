@@ -1,5 +1,6 @@
 import mongoose, { Schema, Document } from 'mongoose';
 import validator from 'validator';
+import { generosPermitidos } from '../config/generos.js';  
 
 export interface ILibro extends Document {
   titulo: string;
@@ -33,6 +34,11 @@ const LibroSchema: Schema = new Schema(
       trim: true,
       minlength: [1, 'El género no puede estar vacío'],
       maxlength: [50, 'El género es demasiado largo'],
+      validate (genero: string) {
+        if (!generosPermitidos.includes(genero)) {
+          throw new Error(`El género '${genero}' no es válido. Los géneros permitidos son: ${generosPermitidos.join(', ')}`);
+        }
+      }
     },
     fechaPublicacion: {
       type: Date,

@@ -1,5 +1,6 @@
 import mongoose, { Schema, Document } from 'mongoose';
 import validator from 'validator';
+import { generosPermitidos } from '../config/generos.js';  
 
 export interface IUsuario extends Document {
   username: string;
@@ -16,7 +17,7 @@ const UsuarioSchema: Schema = new Schema(
       unique: true,
       lowercase: true,
       trim: true,
-      minlength: [4, 'El nombre de usuario debe tener al menos 3 caracteres'],
+      minlength: [4, 'El nombre de usuario debe tener al menos 4 caracteres'],
       maxlength: [20, 'El nombre de usuario es demasiado largo'],
     },
     correo: {
@@ -38,6 +39,12 @@ const UsuarioSchema: Schema = new Schema(
         if (value.length < 1) {
           throw new Error('Debes seleccionar al menos un género literario');
         }
+        // Validar que todos los géneros sean válidos
+        value.forEach((genero) => {
+          if (!generosPermitidos.includes(genero)) {
+            throw new Error(`El género '${genero}' no es válido. Los géneros permitidos son: ${generosPermitidos.join(', ')}`);
+          }
+        });
       },
     },
   },
