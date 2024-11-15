@@ -1,29 +1,41 @@
-import dotenv from 'dotenv';
-import express from 'express';
+import connectDB from './db.js';
+import Libro from './models/book.js';
+import Usuario from './models/user.js';
+import Progreso from './models/progress.js';
 
-// Cargar las variables de entorno desde el archivo .env
-dotenv.config();
+const main = async () => {
+    await connectDB();
 
-const app = express();
+    // Crear un nuevo libro
+    const libro = new Libro({
+        titulo: 'Cien Años de Soledad',
+        autor: 'Gabriel García Márquez',
+        genero: 'Realismo Mágico',
+        fechaPublicacion: new Date('1967-05-30'),
+        paginas: 417,
+    });
+    await libro.save();
 
-// Middleware que transforma el cuerpo de las peticiones a JSON
-app.use(express.json());
-const PORT = process.env.PORT || 5000;
-const DB_URI = process.env.DB_URI;
+    // Crear un nuevo usuario
+    const usuario = new Usuario({
+        nombre: 'Marco Napierski',
+        correo: 'marco@example.com',
+        preferenciasLectura: ['Ciencia Ficción', 'Realismo Mágico'],
+    });
+    await usuario.save();
 
-if (!DB_URI) {
-  console.error(
-    'La URI de conexión a MongoDB no está definida en el archivo .env',
-  );
-} else {
-  console.log('Conectando a MongoDB...');
-}
+    // Crear un nuevo progreso de lectura
+    const progreso = new Progreso({
+        usuarioId: usuario._id,
+        libroId: libro._id,
+        estadoLectura: 'en progreso',
+        porcentajeLeido: 45,
+        notas: 'Interesante desarrollo de personajes.',
+    });
+    await progreso.save();
 
-app.get('/ping', (_, res) => {
-  console.log('Pong!');
-  res.send('Hello World!');
-});
+    console.log('Datos insertados correctamente');
+    process.exit();
+};
 
-app.listen(PORT, () => {
-  console.log(`Server is running on puerto ${PORT}`);
-});
+main().catch((error) => console.error('Error en la aplicación:', error));
