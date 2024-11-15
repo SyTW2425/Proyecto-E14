@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "module": "ESNext", // Usar el módulo ESNext para soportar import/export
+    "moduleResolution": "node", // Resolver módulos como en Node.js
+    "target": "ES6", // Compilar a ES6 o superior
+    "esModuleInterop": true, // Permite la interoperabilidad con módulos CommonJS
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "./dist", // El directorio de salida donde se generará el código transpilado
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "strict": true,
+    "noImplicitAny": true
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules"]
+}
