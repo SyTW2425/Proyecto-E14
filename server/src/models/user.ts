@@ -2,8 +2,6 @@ import mongoose, { Schema, Document } from 'mongoose';
 import validator from 'validator';
 
 export interface IUsuario extends Document {
-  nombre: string;
-  apellidos: string;
   username: string;
   correo: string;
   preferenciasLectura: string[];
@@ -12,20 +10,6 @@ export interface IUsuario extends Document {
 
 const UsuarioSchema: Schema = new Schema(
   {
-    nombre: {
-      type: String,
-      required: [true, 'El nombre es obligatorio'],
-      trim: true,
-      minlength: [1, 'El nombre no puede estar vacío'],
-      maxlength: [100, 'El nombre es demasiado largo'],
-    },
-    apellidos: {
-      type: String,
-      required: [true, 'Los apellidos son obligatorios'],
-      trim: true,
-      minlength: [1, 'Los apellidos no pueden estar vacíos'],
-      maxlength: [70, 'Los apellidos son demasiado largos'],
-    },
     username: {
       type: String,
       required: [true, 'El nombre de usuario es obligatorio'],

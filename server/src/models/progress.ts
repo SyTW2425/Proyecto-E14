@@ -4,7 +4,7 @@ interface IProgreso extends Document {
   usuarioId: mongoose.Types.ObjectId;
   libroId: mongoose.Types.ObjectId;
   estadoLectura: 'En progreso' | 'Completado' | 'Por empezar';
-  porcentajeLeido: number;
+  paginasLeidas: number;
   notas?: string;
 }
 
@@ -29,11 +29,10 @@ const ProgresoSchema = new Schema<IProgreso>(
           'El estado de lectura debe ser "En progreso", "Completado" o "Por empezar"',
       },
     },
-    porcentajeLeido: {
+    paginasLeidas: {
       type: Number,
-      required: [true, 'El porcentaje leído es obligatorio'],
-      min: [0, 'El porcentaje leído no puede ser negativo'],
-      max: [100, 'El porcentaje leído no puede ser mayor a 100'],
+      required: [true, 'El número de páginas es obligatorio'],
+      min: [0, 'El libro debe tener al menos una página'],
     },
     notas: {
       type: String,

@@ -1,5 +1,6 @@
 import { Router, json } from 'express';
-import Libro from '../models/book';
+import Libro from './../models/book.js';
+import { console } from 'inspector';
 
 const book_router = Router();
 
@@ -9,6 +10,7 @@ book_router.use(json());
 book_router.post('/', async (req, res) => {
 	try {
 		const libro = new Libro(req.body);
+		console.log(libro);
 		const savedLibro = await libro.save();
 		res.status(201).json(savedLibro);
 	} catch (error) {

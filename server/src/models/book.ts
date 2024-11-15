@@ -56,13 +56,18 @@ const LibroSchema: Schema = new Schema(
       unique: true,
       trim: true,
       validate: {
-        validator: (value: string) => validator.isISBN(value),
+        validator: (value: string) => {
+          console.log('Validando ISBN:', value); // Agrega este log
+          return validator.isISBN(value);
+        },
         message: 'El ISBN no es válido',
       },
     },
   },
   { collection: 'Book' },
 );
+
+
 
 LibroSchema.index({ titulo: 1, autor: 1 }, { unique: true }); // Esto es para evitar duplicados de títulos y autores (pueden haber varios libros con el mismo título pero de distintos autores)
 
