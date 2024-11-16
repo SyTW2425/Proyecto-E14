@@ -63,7 +63,7 @@ const LibroSchema: Schema = new Schema(
       trim: true,
       validate: {
         validator: (value: string) => {
-          console.log('Validando ISBN:', value); // Agrega este log
+          console.log('Validando ISBN:', value,"·", validator.isISBN(value)); // Agrega este log
           return validator.isISBN(value);
         },
         message: 'El ISBN no es válido',

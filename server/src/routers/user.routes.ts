@@ -43,7 +43,10 @@ user_router.get('/:id', async (req, res) => {
 // Actualizar un usuario por su ID
 user_router.put('/:id', async (req, res) => {
     try {
-        const usuario = await Usuario.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        const usuario = await Usuario.findByIdAndUpdate(req.params.id, req.body, { 
+            new: true,
+            runValidators: true, // Esto asegura que se realice la validación
+        });
         if (usuario) {
             res.json(usuario);
         } else {

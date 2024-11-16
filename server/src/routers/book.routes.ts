@@ -45,7 +45,10 @@ book_router.get('/:id', async (req, res) => {
 // Actualizar un libro por su ID
 book_router.put('/:id', async (req, res) => {
 	try {
-		const libro = await Libro.findByIdAndUpdate(req.params.id, req.body, { new: true });
+		const libro = await Libro.findByIdAndUpdate(req.params.id, req.body, { 
+			new: true,
+			runValidators: true, // Esto asegura que se realice la validación
+		});
 		if (libro) {
 			res.json(libro);
 		} else {

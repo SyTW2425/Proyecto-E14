@@ -4,6 +4,7 @@ import Usuario from './models/user.js';
 import Progreso from './models/progress.js';
 import express from 'express';
 import book_router from './routers/book.routes.js';
+import user_router from './routers/user.routes.js';
 
 const app = express();
 const PORT = 3000;
@@ -22,6 +23,7 @@ connectDB()
  
 // Configuración de rutas
 app.use('/libros', book_router);
+app.use('/usuarios', user_router);
 
 // Iniciar el servidor
 app.listen(PORT, () => {
