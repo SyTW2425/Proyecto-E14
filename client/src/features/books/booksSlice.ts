@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { AppThunk } from '../../app/store';
+import { AppThunk } from '../../redux/store';
 import { fetchBooks } from './booksAPI';
 
 interface Book {

@@ -1,0 +1,76 @@
+.container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #121212;
+    color: white;
+    font-family: 'Arial', sans-serif;
+    background-image: url('../../img/a.png'); /* Add your image URL here */
+    background-size: cover; /* Ensure the image covers the entire area */
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat; /* Prevent the image from repeating */
+  }
+  
+  .progressTracker {
+    flex-grow: 1;
+    width: 100%; /* Make sure it takes up full width */
+  }
+  /* dinamic margin */
+  .formSection {
+    margin-bottom: auto;
+    max-width: 400px;
+    margin-left: 2rem;
+    background-color: rgba(0, 0, 0, 0.5); /* Optional: add a dark overlay for readability */
+    padding: 20px;
+    border-radius: 10px;
+  }
+  
+  .formSection h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+  }
+  
+  .formSection p {
+    margin-bottom: 1.5rem;
+    color: #bbb;
+  }
+  
+  .formControl {
+    background-color: #1f1f1f;
+    border: 1px solid #333;
+    color: white;
+  }
+  
+  .formControl:focus {
+    background-color: #1f1f1f;
+    border-color: #007bff;
+    box-shadow: none;
+    color: white;
+  }
+  
+  .formControl::placeholder {
+    color: #b4b4b4;
+    opacity: 1;
+    font-style: italic;
+  }
+  
+  .btnPrimary {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+  
+  .btnPrimary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+  }
+  
+  .loginLink a {
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  .loginLink a:hover {
+    text-decoration: underline;
+  }
+  
