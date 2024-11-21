@@ -18,12 +18,14 @@
   }
   /* dinamic margin */
   .formSection {
+    margin-top: auto;
     margin-bottom: auto;
     max-width: 400px;
     margin-left: 2rem;
-    background-color: rgba(0, 0, 0, 0.5); /* Optional: add a dark overlay for readability */
+    background-color: rgba(0, 0, 0, 0.7); /* Optional: add a dark overlay for readability */
     padding: 20px;
     border-radius: 10px;
+    font-weight: bold;
   }
   
   .formSection h1 {
@@ -34,6 +36,7 @@
   .formSection p {
     margin-bottom: 1.5rem;
     color: #bbb;
+    font-weight: bold;
   }
   
   .formControl {
@@ -68,6 +71,7 @@
   .loginLink a {
     color: #007bff;
     text-decoration: none;
+    font-weight: bold;
   }
   
   .loginLink a:hover {

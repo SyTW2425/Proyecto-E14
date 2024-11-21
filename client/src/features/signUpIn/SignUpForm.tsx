@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import styles from './SignUpForm.module.css';
+import styles from './SignUpInForm.module.css';
 import { useDispatch } from 'react-redux';
 import { signUp } from './signUpSlice';
 import progressImage from '../../img/a.png';
