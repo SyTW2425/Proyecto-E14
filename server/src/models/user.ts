@@ -1,12 +1,14 @@
 import mongoose, { Schema, Document } from 'mongoose';
 import validator from 'validator';
-import { generosPermitidos } from '../config/generos.js';  
+import bcrypt from 'bcrypt';
+import { generosPermitidos } from '../config/generos.js';
 
 export interface IUsuario extends Document {
   username: string;
   correo: string;
   preferenciasLectura: string[];
-  //password: string;           Para cuando se implemente la autenticación
+  password: string;
+  comparePassword(password: string): Promise<boolean>;
 }
 
 const UsuarioSchema: Schema = new Schema(
@@ -42,14 +44,34 @@ const UsuarioSchema: Schema = new Schema(
         // Validar que todos los géneros sean válidos
         value.forEach((genero) => {
           if (!generosPermitidos.includes(genero)) {
-            throw new Error(`El género '${genero}' no es válido. Los géneros permitidos son: ${generosPermitidos.join(', ')}`);
+            throw new Error(
+              `El género '${genero}' no es válido. Los géneros permitidos son: ${generosPermitidos.join(', ')}`,
+            );
           }
         });
       },
     },
+    password: {
+      type: String,
+      required: [true, 'La contraseña es obligatoria'],
+      minlength: [6, 'La contraseña debe tener al menos 8 caracteres'],
+    },
   },
   { collection: 'User' },
 );
+
+UsuarioSchema.pre<IUsuario>('save', async function (next) {
+  if (!this.isModified('password')) return next(); // Si la contraseña no fue modificada, no la ciframos
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+  next();
+});
+
+UsuarioSchema.methods.comparePassword = async function (
+  password: string,
+): Promise<boolean> {
+  return await bcrypt.compare(password, this.password);
+};
 
 const Usuario = mongoose.model<IUsuario>('User', UsuarioSchema);
 export default Usuario;

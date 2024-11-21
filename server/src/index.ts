@@ -1,14 +1,18 @@
 import connectDB from './db.js';
-import Libro from './models/book.js';
-import Usuario from './models/user.js';
-import Progreso from './models/progress.js';
+//import Libro from './models/book.js';
+//import Usuario from './models/user.js';
+//import Progreso from './models/progress.js';
 import express from 'express';
-import cors from 'cors'; 
+import cors from 'cors';
+import dotenv from 'dotenv';
 import book_router from './routers/book.routes.js';
 import user_router from './routers/user.routes.js';
+import authRouter from './routers/auth.routes.js';
+
+dotenv.config();
 
 const app = express();
-const PORT = 4200;
+const PORT = process.env.PORT || 3000;
 
 // Middleware para habilitar CORS
 app.use(cors()); // Permite solicitudes desde cualquier origen
@@ -16,7 +20,7 @@ app.use(cors()); // Permite solicitudes desde cualquier origen
 // Middleware para procesar JSON
 app.use(express.json());
 
-// Conectar a la base de datos 
+// Conectar a la base de datos
 connectDB()
   .then(() => console.log('Conexión a MongoDB en script exitosa'))
   .catch((error) => {
@@ -27,6 +31,7 @@ connectDB()
 // Configuración de rutas
 app.use('/libros', book_router);
 app.use('/usuarios', user_router);
+app.use('/auth', authRouter); // Ruta para autenticación
 
 // Iniciar el servidor
 app.listen(PORT, () => {
