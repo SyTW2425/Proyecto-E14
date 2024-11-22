@@ -274,7 +274,7 @@ export const SignUp: React.FC = () => {
             <div className="relative flex flex-col pt-4 -mt-6">
               <button
                 type="button"
-                className="w-full border rounded-lg bg-white px-5 py-2.5 text-left text-gray-700 flex items-center justify-between"
+                className="w-full border rounded-lg bg-white px-4 py-2 text-left text-gray-400 flex items-center justify-between"
                 onClick={toggleDropdown}
               >
                 {selectedGenres.length > 0
