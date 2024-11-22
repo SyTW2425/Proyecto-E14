@@ -8,9 +8,10 @@ const JWT_SECRET = process.env.JWT_SECRET || 'tu_secreto_jwt';
 // Registro
 export const signup = async (req: Request, res: Response) => {
   try {
-    const { username, correo, preferenciasLectura, password } = req.body;
+    const { name, username, correo, preferenciasLectura, password } = req.body;
 
     const nuevoUsuario = new Usuario({
+      name,
       username,
       correo,
       preferenciasLectura,

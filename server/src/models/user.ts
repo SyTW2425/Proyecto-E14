@@ -54,11 +54,13 @@ const UsuarioSchema: Schema = new Schema(
     password: {
       type: String,
       required: [true, 'La contraseña es obligatoria'],
-      minlength: [6, 'La contraseña debe tener al menos 8 caracteres'],
+      minlength: [6, 'La contraseña debe tener al menos 6 caracteres'],
     },
   },
   { collection: 'User' },
 );
+
+UsuarioSchema.index({ username: 1, correo: 1 }, { unique: true });
 
 UsuarioSchema.pre<IUsuario>('save', async function (next) {
   if (!this.isModified('password')) return next(); // Si la contraseña no fue modificada, no la ciframos

@@ -106,12 +106,12 @@ export const SignIn: React.FC = () => {
                 />
               </div>
 
-              <p className="mt-3 block text-xl font-bold text-gray-600 relative -top-20">
+              <p className="mt-3 block text-xl font-bold text-gray-900 relative -top-20">
                 Sign in to access your account
               </p>
             </div>
 
-            <div className="mt-8 -mt-6">
+            <div className="mt-8 -mt-7">
               <form onSubmit={handleSubmit}>
                 <div>
                   <label
@@ -126,7 +126,7 @@ export const SignIn: React.FC = () => {
                     id="email"
                     //placeholder="example@example.com"
                     onChange={(e) => setEmail(e.target.value)} // Actualizar el estado del email
-                    className="block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-green-400 dark:focus:border-green-400 focus:ring-green-400 focus:outline-none focus:ring focus:ring-opacity-40"
+                    className="block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-green1 dark:focus:border-green1 focus:ring-green1 focus:outline-none focus:ring focus:ring-opacity-40"
                   />
                 </div>
 
@@ -146,7 +146,7 @@ export const SignIn: React.FC = () => {
                     id="password"
                     //placeholder="Your Password"
                     onChange={(e) => setPassword(e.target.value)} // Actualizar el estado de la contraseña
-                    className="block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-green-500 dark:focus:border-green-500 focus:ring-green-500 focus:outline-none focus:ring focus:ring-opacity-40"
+                    className="block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-green1 dark:focus:border-green2 focus:ring-green2 focus:outline-none focus:ring focus:ring-opacity-40"
                   />
                 </div>
 
@@ -159,7 +159,7 @@ export const SignIn: React.FC = () => {
                 <div className="mt-6">
                   <button
                     type="submit"
-                    className="w-full px-4 py-2 tracking-wide text-white transition-colors duration-300 transform bg-green-700 rounded-lg hover:bg-green-600 focus:outline-none focus:bg-green-600 focus:ring focus:ring-green-500 focus:ring-opacity-50"
+                    className="w-full px-4 py-2 tracking-wide text-white transition-colors duration-300 transform bg-green2 rounded-lg hover:bg-green1 focus:outline-none focus:bg-green1 focus:ring focus:ring-green1 focus:ring-opacity-50"
                   >
                     Sign in
                   </button>
@@ -169,7 +169,7 @@ export const SignIn: React.FC = () => {
               <p className="mt-6 text-sm text-center text-gray-400">
                 Don&#x27;t have an account yet?{" "}
                 <button
-                  className="text-green-600 focus:outline-none focus:underline hover:underline"
+                  className="text-green1 focus:outline-none focus:underline hover:underline"
                   onClick={() => navigate("/signup")} // Navega a /signup
                 >
                   Sign up

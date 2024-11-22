@@ -1,6 +1,4 @@
 export const generosPermitidos = [
-  'Ficción',
-  'No Ficción',
   'Ciencia Ficción',
   'Fantasía',
   'Romántico',
@@ -8,9 +6,8 @@ export const generosPermitidos = [
   'Thriller',
   'Histórico',
   'Biografía',
-  'Terror',
   'Aventura',
   'Humor',
   'Drama',
-  'Poesía'
+  'Poesía',
 ];

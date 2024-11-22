@@ -8,6 +8,8 @@ import dotenv from 'dotenv';
 import book_router from './routers/book.routes.js';
 import user_router from './routers/user.routes.js';
 import authRouter from './routers/auth.routes.js';
+import genresRouter from './routers/genres.routes.js';
+import { errorHandler } from './middlewares/errorHandler.js';
 
 dotenv.config();
 
@@ -31,7 +33,11 @@ connectDB()
 // Configuración de rutas
 app.use('/libros', book_router);
 app.use('/usuarios', user_router);
+app.use('/genres', genresRouter);
 app.use('/auth', authRouter); // Ruta para autenticación
+
+// Middleware para manejo de errores
+app.use(errorHandler);
 
 // Iniciar el servidor
 app.listen(PORT, () => {

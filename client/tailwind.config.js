@@ -8,6 +8,10 @@ module.exports = {
         barlow: ["Barlow", "sans-serif"],
         poppins: ["Poppins", "sans-serif"],
       },
+      colors: {
+        green1: "#49ab81",
+        green2: "#419873",
+      },
     },
   },
   plugins: [],
