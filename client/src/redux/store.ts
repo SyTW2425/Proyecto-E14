@@ -1,13 +1,14 @@
-import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import counterReducer from '../features/counter/counterSlice';
-import booksReducer from '../features/books/booksSlice';
-import signUpReducer from '../features/signUpIn/signUpSlice';
+import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
+import counterReducer from "../components/counter/counterSlice";
+import booksReducer from "../components/books/booksSlice";
+//import signUpReducer from "../components/signUpIn/signUpSlice";
+import sessionReducer from "../slices/sessionSlice";
 
 export const store = configureStore({
   reducer: {
     counter: counterReducer,
     books: booksReducer,
-    signUp: signUpReducer,
+    session: sessionReducer,
   },
 });
 
@@ -19,3 +20,5 @@ export type AppThunk<ReturnType = void> = ThunkAction<
   unknown,
   Action<string>
 >;
+
+export default store;

@@ -38,7 +38,7 @@ export const signup = async (req: Request, res: Response) => {
 };
 
 // Inicio de sesión
-export const login = async (req: Request, res: Response) => {
+export const signin = async (req: Request, res: Response) => {
   try {
     const { correo, password } = req.body;
 

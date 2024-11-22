@@ -1,23 +1,22 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
-import BooksList from "./features/books/booksList";
-import SignUpForm from "./features/signUpIn/SignUpForm";
-import SignInForm from "./features/signUpIn/SignInForm";
-import Navbar from "./features/navbar/navbar";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import SignUp from "./Pages/SignUp";
+import SignIn from "./Pages/SignIn";
+//import BooksList from "./components/books/booksList";
+//import SignUpForm from "./features/signUpIn/SignUpForm";
+//import SignInForm from "./features/signUpIn/SignInForm";
 
 function App() {
   return (
     <Router>
-      <div className="App">
-        <main>
-          <Routes>
-            <Route path="/auth/signup" element={<SignUpForm />} />
-            <Route path="/auth/signin" element={<SignInForm />} />
-            <Route path="/" element={<BooksList />} />
-          </Routes>
-        </main>
-      </div>
+      <Routes>
+        <Route path="/" element={<h1>Home</h1>} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/signin" element={<SignIn />} />
+        {/*<Route path="/sign-up" element={<h1>Sign Up</h1>} /> */}
+        {/*<Route path="/sign-in" element={<h1>Sign In</h1>} /> */}
+      </Routes>
     </Router>
   );
 }
