@@ -15,7 +15,6 @@ export const SignUp: React.FC = () => {
 
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -48,7 +47,6 @@ export const SignUp: React.FC = () => {
   const validateInputs = () => {
     const errors: Record<string, string> = {};
 
-    if (!name.trim()) errors.name = "Name is required.";
     if (!username.trim()) errors.username = "Username is required.";
     if (!email.trim()) errors.email = "Email is required.";
     else if (!/\S+@\S+\.\S+/.test(email))
@@ -75,7 +73,6 @@ export const SignUp: React.FC = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          nombre: name,
           username,
           correo: email,
           password,
@@ -95,7 +92,6 @@ export const SignUp: React.FC = () => {
       dispatch(setSession({ token: data.token, userObject: data.userObject }));
 
       // Limpia los campos
-      setName("");
       setUsername("");
       setEmail("");
       setPassword("");
@@ -188,7 +184,7 @@ export const SignUp: React.FC = () => {
             className="flex flex-col items-stretch pt-3 md:pt-8"
           >
             {/* Name */}
-            <div className="flex flex-col pt-4">
+            {/* <div className="flex flex-col pt-4">
               <div className="relative flex overflow-hidden rounded-md border-2 transition focus-within:border-blue-600">
                 <input
                   type="text"
@@ -202,7 +198,7 @@ export const SignUp: React.FC = () => {
                   <p className="text-red-600 text-sm">{fieldErrors.name}</p>
                 )}
               </div>
-            </div>
+            </div> */}
             {/* Username */}
             <div className="flex flex-col pt-4">
               <div className="relative flex overflow-hidden rounded-md border-2 transition focus-within:border-blue-600">
