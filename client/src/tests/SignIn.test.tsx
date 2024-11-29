@@ -47,7 +47,7 @@ describe("SignIn Component", () => {
     fireEvent.change(screen.getByLabelText(/Email Address/i), {
       target: { value: "invalidemail" },
     });
-    fireEvent.click(screen.getByText(/Sign in/i));
+    fireEvent.click(screen.getByRole('button', { name: /Sign in/i }));
 
     expect(screen.getByText(/Email format is invalid/i)).toBeInTheDocument();
   });
@@ -78,9 +78,9 @@ describe("SignIn Component", () => {
     fireEvent.change(screen.getByLabelText(/Password/i), {
       target: { value: "password123" },
     });
-    fireEvent.click(screen.getByText(/Sign in/i));
+    fireEvent.click(screen.getByRole('button', { name: /Sign in/i }));
 
-    expect(await screen.findByText(/Sign in/i)).toBeInTheDocument();
+    expect(await screen.findByRole('button', { name: /Sign in/i })).toBeInTheDocument();
     expect(mockNavigate).toHaveBeenCalledWith("/");
   });
 });

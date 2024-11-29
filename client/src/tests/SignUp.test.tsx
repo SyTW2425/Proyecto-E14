@@ -33,8 +33,9 @@ describe("SignUp Component", () => {
 
     expect(screen.getByPlaceholderText(/Username/i)).toBeInTheDocument();
     expect(screen.getByPlaceholderText(/Email/i)).toBeInTheDocument();
-    expect(screen.getByPlaceholderText(/Password/i)).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/Password \(minimum 6 characters\)/i)).toBeInTheDocument();
     expect(screen.getByPlaceholderText(/Confirm Password/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Select Preferences/i })).toBeInTheDocument();
   });
 
   test("shows error if passwords do not match", () => {
@@ -46,16 +47,16 @@ describe("SignUp Component", () => {
       </Provider>
     );
 
-    fireEvent.change(screen.getByPlaceholderText(/Password/i), {
+    fireEvent.change(screen.getByPlaceholderText(/Password \(minimum 6 characters\)/i), {
       target: { value: "user@example.com" },
     });
     fireEvent.change(screen.getByPlaceholderText(/Confirm Password/i), {
       target: { value: "differentpassword" },
     });
-    fireEvent.click(screen.getByText(/Create your account/i));
+    fireEvent.click(screen.getByRole('button', { name: /Sign Up/i }));
 
     expect(
-      screen.getByText(/Passwords do not match/i)
+      screen.getByText(/Passwords do not match./i)
     ).toBeInTheDocument();
   });
 
@@ -81,14 +82,16 @@ describe("SignUp Component", () => {
     fireEvent.change(screen.getByPlaceholderText(/Email/i), {
       target: { value: "user@example.com" },
     });
-    fireEvent.change(screen.getByPlaceholderText(/Password/i), {
+    fireEvent.change(screen.getByPlaceholderText(/Password \(minimum 6 characters\)/i), {
       target: { value: "password123" },
     });
     fireEvent.change(screen.getByPlaceholderText(/Confirm Password/i), {
       target: { value: "password123" },
     });
-    fireEvent.click(screen.getByText(/Create your account/i));
+    fireEvent.click(screen.getByRole('button', { name: /Select Preferences/i }));
 
-    await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith("/signin"));
+    fireEvent.click(screen.getByRole('button', { name: /Sign Up/i }));
+    expect(await screen.findByRole('button', { name: /Sign Up/i })).toBeInTheDocument();
+    expect(mockNavigate).toHaveBeenCalledWith("/signin");
   });
 });

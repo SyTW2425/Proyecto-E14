@@ -56,8 +56,8 @@ export const SignUp: React.FC = () => {
       errors.password = "Password must be at least 6 characters.";
     if (password !== confirmPassword)
       errors.confirmPassword = "Passwords do not match.";
-    if (selectedGenres.length === 0)
-      errors.selectedGenres = "At least one genre must be selected.";
+    //if (selectedGenres.length === 0)
+    //  errors.selectedGenres = "At least one genre must be selected.";
 
     setFieldErrors(errors);
     return Object.keys(errors).length === 0 ? null : errors;
