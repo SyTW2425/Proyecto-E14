@@ -30,12 +30,12 @@ jobs:
 
       # Paso 3: Instalar dependencias
       - name: Install dependencies
-        working-directory: ./backend # Asegúrate de que el directorio es correcto
+        working-directory: ./server # Asegúrate de que el directorio es correcto
         run: npm install
 
       # Paso 4: Ejecutar los tests
       - name: Run tests
-        working-directory: ./backend # Asegúrate de que el directorio es correcto
+        working-directory: ./server # Asegúrate de que el directorio es correcto
         env:
           MONGODB_URI: ${{ secrets.MONGODB_URI }} # Base de datos de producción
           TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI }} # Base de datos de pruebas
