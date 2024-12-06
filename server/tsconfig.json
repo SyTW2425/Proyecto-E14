@@ -10,8 +10,12 @@
     "allowJs": true,
     "resolveJsonModule": true,
     "strict": true,
-    "noImplicitAny": true
+    "noImplicitAny": true,
+    "baseUrl": "./",
+    "paths": {
+      "*": ["*", "*.js"]
+    }
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "test/**/*.js"],
   "exclude": ["node_modules"]
 }

@@ -1,0 +1,43 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+name: Backend CI
+
+on:
+  push:
+    branches: ["desarrollo", "main"]
+  pull_request:
+    branches: ["desarrollo", "main"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x, 22.x] # Matrix para pruebas con múltiples versiones de Node.js
+
+    steps:
+      # Paso 1: Checkout del código del repositorio
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Paso 2: Configuración de Node.js (instala Node.js según la versión definida en el matrix)
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }} # Usa la versión de Node.js definida en el matrix
+
+      # Paso 3: Instalar dependencias
+      - name: Install dependencies
+        working-directory: ./backend # Asegúrate de que el directorio es correcto
+        run: npm install
+
+      # Paso 4: Ejecutar los tests
+      - name: Run tests
+        working-directory: ./backend # Asegúrate de que el directorio es correcto
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }} # Base de datos de producción
+          TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI }} # Base de datos de pruebas
+          JWT_SECRET: ${{ secrets.JWT_SECRET }} # Clave JWT
+        run: npm test

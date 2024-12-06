@@ -14,7 +14,7 @@ import { errorHandler } from './middlewares/errorHandler.js';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+export const PORT = process.env.PORT || 3000;
 
 // Middleware para habilitar CORS
 app.use(cors()); // Permite solicitudes desde cualquier origen
@@ -40,6 +40,19 @@ app.use('/auth', authRouter); // Ruta para autenticación
 app.use(errorHandler);
 
 // Iniciar el servidor
-app.listen(PORT, () => {
-  console.log(`Servidor escuchando en http://localhost:${PORT}`);
-});
+// app.listen(PORT, () => {
+//   console.log(`Servidor escuchando en http://localhost:${PORT}`);
+// });
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, () => {
+    console.log(`Servidor escuchando en http://localhost:${PORT}`);
+  });
+}
+
+export const startServer = () => {
+  return app.listen(PORT, () => {
+    console.log(`Servidor escuchando en http://localhost:${PORT}`);
+  });
+};
+
+export default app;
