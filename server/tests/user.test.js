@@ -12,11 +12,11 @@ describe('Auth Endpoints - Signup', () => {
   });
 
   afterAll(async () => {
-    // const collections = mongoose.connection.collections;
+    const collections = mongoose.connection.collections;
 
-    // for (const key in collections) {
-    //   await collections[key].deleteMany({}); // Limpia todos los documentos
-    // }
+    for (const key in collections) {
+      await collections[key].deleteMany({}); // Limpia todos los documentos
+    }
 
     await mongoose.disconnect();
     console.log('Conexión a la base de datos de pruebas cerrada');
