@@ -5,13 +5,12 @@ name: Frontend CI
 
 on:
   push:
-    branches: [ "desarrollo", "main" ]
+    branches: ["desarrollo", "main"]
   pull_request:
-    branches: [ "desarrollo", "main" ]
+    branches: ["desarrollo", "main"]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
@@ -20,15 +19,15 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - name: Install Dependencies
-      run: npm i
-      working-directory: ./client
-    - name: Run Tests
-      run: npm test
-      working-directory: ./client
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+      - name: Install Dependencies
+        run: npm i --legacy-peer-deps
+        working-directory: ./client
+      - name: Run Tests
+        run: npm test
+        working-directory: ./client
