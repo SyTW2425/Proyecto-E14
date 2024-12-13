@@ -1,0 +1,40 @@
+name: Backend Coverage CI
+
+on:
+  push:
+    branches: ["desarrollo", "main"]
+  pull_request:
+    branches: ["desarrollo", "main"]
+
+jobs:
+  build-and-coverage:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 22.x]
+
+    steps:
+      # Paso 1: Checkout del código
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Paso 2: Configurar Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      # Paso 3: Instalar dependencias
+      - name: Install dependencies
+        run: npm install
+
+      # Paso 4: Generar cobertura con Jest
+      - name: Generating coverage information
+        run: npm run coverage
+
+      # Paso 5: Subir cobertura a Coveralls
+      - name: Coveralls GitHub Action
+        uses: coverallsapp/github-action@v2.2.3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }} # Token generado automáticamente por GitHub

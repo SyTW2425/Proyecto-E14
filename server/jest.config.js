@@ -8,4 +8,11 @@ export default {
   moduleNameMapper: {
     '^(\\.{1,2}/.*)\\.js$': '$1', // Mapea extensiones .js para TypeScript
   },
+  collectCoverage: true, // Habilita la recopilación de cobertura
+  coverageDirectory: 'coverage', // Directorio donde se generará el reporte de cobertura
+  coverageReporters: ['text', 'lcov'], // Formatos de reporte de cobertura
+  collectCoverageFrom: [
+    'src/**/*.ts', // Incluye todos los archivos TypeScript en el directorio src
+    '!src/index.ts', // Excluye archivos no relevantes, como el punto de entrada
+  ],
 };
