@@ -160,7 +160,7 @@ export const SignUp: React.FC = () => {
       </div>
       <div className="flex w-full flex-col md:w-1/2 -mt-1">
         <div className="flex justify-center pt-12 md:justify-start md:pl-12">
-          <button className="text-2xl font-bold text-green2">
+          <button className="text-2xl font-bold text-green1 hover:text-green2">
             {" "}
             Bookies .{" "}
           </button>
@@ -172,7 +172,7 @@ export const SignUp: React.FC = () => {
           <p className="mt-6 text-center font-medium md:text-left">
             Already have an account? {""}
             <button
-              className="whitespace-nowrap font-bold text-green1"
+              className="whitespace-nowrap font-bold text-green1 hover:text-green2"
               onClick={() => navigate("/signin")}
             >
               Login here
@@ -342,7 +342,7 @@ export const SignUp: React.FC = () => {
 
             <button
               type="submit"
-              className="mt-6 w-full rounded-lg bg-green1 px-4 py-2 text-center text-base font-semibold text-white shadow-md outline-none ring-blue-500 ring-offset-2 transition hover:bg-blue-700 focus:ring-2"
+              className="mt-6 w-full rounded-lg bg-green1 px-4 py-2 text-center text-base font-semibold text-white shadow-md outline-none ring-blue-500 ring-offset-2 transition hover:bg-green2 focus:ring-2"
             >
               Sign Up
             </button>

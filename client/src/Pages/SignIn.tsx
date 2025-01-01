@@ -159,7 +159,7 @@ export const SignIn: React.FC = () => {
                 <div className="mt-6">
                   <button
                     type="submit"
-                    className="w-full px-4 py-2 tracking-wide text-white transition-colors duration-300 transform bg-green2 rounded-lg hover:bg-green1 focus:outline-none focus:bg-green1 focus:ring focus:ring-green1 focus:ring-opacity-50"
+                    className="w-full px-4 py-2 tracking-wide text-white transition-colors duration-300 transform bg-green1 rounded-lg hover:bg-green2 focus:outline-none focus:bg-green1 focus:ring focus:ring-green2 focus:ring-opacity-50"
                   >
                     Sign in
                   </button>
@@ -169,7 +169,7 @@ export const SignIn: React.FC = () => {
               <p className="mt-6 text-sm text-center text-gray-400">
                 Don&#x27;t have an account yet?{" "}
                 <button
-                  className="text-green1 focus:outline-none focus:underline hover:underline"
+                  className="text-green1 focus:outline-none focus:underline hover:text-green2 hover:underline"
                   onClick={() => navigate("/signup")} // Navega a /signup
                 >
                   Sign up
