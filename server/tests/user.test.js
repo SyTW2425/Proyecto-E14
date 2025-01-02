@@ -35,7 +35,7 @@ describe('Auth Endpoints - Signup', () => {
     expect(response.status).toBe(201);
     expect(response.body).toHaveProperty(
       'message',
-      'Usuario registrado exitosamente',
+      'User succesfully registered',
     );
     expect(response.body).toHaveProperty('token');
   });

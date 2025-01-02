@@ -15,12 +15,12 @@ const UsuarioSchema: Schema = new Schema(
   {
     username: {
       type: String,
-      required: [true, 'El nombre de usuario es obligatorio'],
+      required: [true, 'The username is required'],
       unique: true,
       lowercase: true,
       trim: true,
-      minlength: [4, 'El nombre de usuario debe tener al menos 4 caracteres'],
-      maxlength: [20, 'El nombre de usuario es demasiado largo'],
+      minlength: [4, 'The username must be at least 4 characters long'],
+      maxlength: [20, 'The username is too long'],
     },
     correo: {
       type: String,
@@ -30,7 +30,7 @@ const UsuarioSchema: Schema = new Schema(
       trim: true,
       validate(value: string) {
         if (!validator.isEmail(value)) {
-          throw new Error('El correo electrónico no es válido');
+          throw new Error('The email is not valid');
         }
       },
     },
@@ -39,13 +39,13 @@ const UsuarioSchema: Schema = new Schema(
       required: true,
       validate(value: string[]) {
         if (value.length < 1) {
-          throw new Error('Debes seleccionar al menos un género literario');
+          throw new Error('At least one genre is required');
         }
         // Validar que todos los géneros sean válidos
         value.forEach((genero) => {
           if (!generosPermitidos.includes(genero)) {
             throw new Error(
-              `El género '${genero}' no es válido. Los géneros permitidos son: ${generosPermitidos.join(', ')}`,
+              `The genre '${genero}' is not valid. The valid genres are: ${generosPermitidos.join(', ')}`,
             );
           }
         });
@@ -53,8 +53,8 @@ const UsuarioSchema: Schema = new Schema(
     },
     password: {
       type: String,
-      required: [true, 'La contraseña es obligatoria'],
-      minlength: [6, 'La contraseña debe tener al menos 6 caracteres'],
+      required: [true, 'The password is required'],
+      minlength: [6, 'The password must be at least 6 characters long'],
     },
   },
   { collection: 'User' },

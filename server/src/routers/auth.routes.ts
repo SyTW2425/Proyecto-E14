@@ -8,16 +8,14 @@ const authRouter = Router();
 authRouter.post(
   '/signup',
   [
-    body('username')
-      .notEmpty()
-      .withMessage('El nombre de usuario es obligatorio'),
-    body('correo').isEmail().withMessage('Correo electrónico inválido'),
+    body('username').notEmpty().withMessage('The username is required'),
+    body('correo').isEmail().withMessage('The email is not valid'),
     body('password')
       .isLength({ min: 6 })
-      .withMessage('La contraseña debe tener al menos 6 caracteres'),
+      .withMessage('The password must be at least 6 characters long'),
     body('preferenciasLectura')
       .isArray()
-      .withMessage('Las preferencias de lectura deben ser un array'),
+      .withMessage('The reading preferences must be an array'),
   ],
   validateRequest,
   signup,

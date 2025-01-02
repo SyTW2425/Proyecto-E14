@@ -23,14 +23,14 @@ export const signup = async (req: Request, res: Response) => {
       expiresIn: '1h',
     });
 
-    res.status(201).json({ message: 'Usuario registrado exitosamente', token });
+    res.status(201).json({ message: 'User succesfully registered', token });
   } catch (error) {
     if ((error as MongoError).code === 11000) {
       const field = Object.keys(
         (error as MongoError & { keyValue: Record<string, unknown> }).keyValue,
       )[0]; // Obtener el campo duplicado
       res.status(400).json({
-        error: `El ${field} ya está en uso. Por favor, elige otro.`,
+        error: `The ${field} is taken. Please, choose another.`,
       });
     } else {
       res.status(400).json({ error: (error as Error).message });
@@ -44,18 +44,16 @@ export const signin = async (req: Request, res: Response) => {
     const { correo, password } = req.body;
 
     const usuario = await Usuario.findOne({ correo });
-    if (!usuario)
-      return res.status(404).json({ error: 'Usuario no encontrado' });
+    if (!usuario) return res.status(404).json({ error: 'User not found' });
 
     const isMatch = await usuario.comparePassword(password);
-    if (!isMatch)
-      return res.status(400).json({ error: 'Contraseña incorrecta' });
+    if (!isMatch) return res.status(400).json({ error: 'Incorrect password' });
 
     const token = jwt.sign({ id: usuario._id }, JWT_SECRET, {
       expiresIn: '1h',
     });
 
-    res.status(200).json({ message: 'Inicio de sesión exitoso', token });
+    res.status(200).json({ message: 'Successful login', token });
   } catch (error) {
     res.status(500).json({ error: (error as Error).message });
   }

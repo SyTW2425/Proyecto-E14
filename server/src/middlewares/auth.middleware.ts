@@ -17,9 +17,7 @@ export const authMiddleware = (
   const token = req.header('Authorization')?.split(' ')[1]; // Leer el token del encabezado Authorization
 
   if (!token) {
-    return res
-      .status(401)
-      .json({ error: 'Acceso denegado. No se proporcionó un token.' });
+    return res.status(401).json({ error: 'Access denied. No token provided.' });
   }
 
   try {
@@ -27,6 +25,6 @@ export const authMiddleware = (
     req.userId = decoded.id; // Guardar el ID del usuario en la request
     next();
   } catch {
-    res.status(403).json({ error: 'Token no válido o expirado.' });
+    res.status(403).json({ error: 'The token is not valid or has expired.' });
   }
 };

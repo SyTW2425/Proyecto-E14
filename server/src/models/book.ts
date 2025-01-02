@@ -1,79 +1,68 @@
 import mongoose, { Schema, Document } from 'mongoose';
 import validator from 'validator';
-import { generosPermitidos } from '../config/generos.js';  
+import { generosPermitidos } from '../config/generos.js';
 
 export interface ILibro extends Document {
   titulo: string;
   autor: string;
   genero: string;
-  fechaPublicacion: Date;
   paginas: number;
   sinopsis: string;
-  isbn: string;
+  portada: string;
 }
 
 const LibroSchema: Schema = new Schema(
   {
     titulo: {
       type: String,
-      required: [true, 'El título es obligatorio'],
+      required: [true, 'The title is required'],
       trim: true,
-      minlength: [1, 'El título no puede estar vacío'],
-      maxlength: [100, 'El título es demasiado largo'],
+      minlength: [1, 'The title cannot be empty'],
+      maxlength: [100, 'The title is too long'],
     },
     autor: {
       type: String,
-      required: [true, 'El autor es obligatorio'],
+      required: [true, 'The author is required'],
       trim: true,
-      minlength: [1, 'El autor no puede estar vacío'],
-      maxlength: [70, 'El autor es demasiado largo'],
+      minlength: [1, 'The author cannot be empty'],
+      maxlength: [70, 'The author is too long'],
     },
     genero: {
       type: String,
-      required: [true, 'El género es obligatorio'],
+      required: [true, 'The genre is required'],
       trim: true,
-      minlength: [1, 'El género no puede estar vacío'],
-      maxlength: [50, 'El género es demasiado largo'],
-      validate (genero: string) {
-        if (!generosPermitidos.includes(genero)) {
-          throw new Error(`El género '${genero}' no es válido. Los géneros permitidos son: ${generosPermitidos.join(', ')}`);
-        }
-      }
-    },
-    fechaPublicacion: {
-      type: Date,
-      required: [true, 'La fecha de publicación es obligatoria'],
+      enum: generosPermitidos,
     },
     paginas: {
       type: Number,
-      required: [true, 'El número de páginas es obligatorio'],
-      min: [1, 'El libro debe tener al menos una página'],
+      required: [true, 'The number of pages is required'],
+      min: [1, 'The number of pages must be greater than 0'],
     },
     sinopsis: {
       type: String,
-      required: [true, 'La sinopsis es obligatoria'],
+      required: [true, 'The synopsis is required'],
       trim: true,
-      minlength: [1, 'La sinopsis no puede estar vacía'],
-      maxlength: [600, 'La sinopsis es demasiado larga'],
+      minlength: [1, 'The synopsis cannot be empty'],
+      maxlength: [400, 'The synopsis is too long'],
     },
-    isbn: {
+    portada: {
       type: String,
-      required: [true, 'El ISBN es obligatorio'],
-      unique: true,
+      required: [true, 'The cover URL is required'],
       trim: true,
-      validate: {
-        validator: (value: string) => {
-          console.log('Validando ISBN:', value,"·", validator.isISBN(value)); // Agrega este log
-          return validator.isISBN(value);
-        },
-        message: 'El ISBN no es válido',
+      validate(portada: string) {
+        if (
+          !validator.isURL(portada, {
+            protocols: ['http', 'https'],
+            require_protocol: true,
+          })
+        ) {
+          throw new Error('The cover URL is not valid');
+        }
       },
     },
   },
   { collection: 'Book' },
 );
-
-
 
 LibroSchema.index({ titulo: 1, autor: 1 }, { unique: true }); // Esto es para evitar duplicados de títulos y autores (pueden haber varios libros con el mismo título pero de distintos autores)
 

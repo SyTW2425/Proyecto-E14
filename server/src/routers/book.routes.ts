@@ -1,76 +1,24 @@
-import { Router, json } from 'express';
-import Libro from './../models/book.js';
-import { console } from 'inspector';
+import { Router } from 'express';
+import {
+  addBook,
+  getAllBooks,
+  getBookById,
+  updateBook,
+  deleteBook,
+} from '../controllers/book.controller.js';
+import { authMiddleware } from '../middlewares/auth.middleware.js';
 
-const book_router = Router();
+const bookRouter = Router();
 
-book_router.use(json());
+// Add a new book
+bookRouter.post('/', authMiddleware, addBook);
+// Get all books
+bookRouter.get('/', authMiddleware, getAllBooks);
+// Get a book by ID
+bookRouter.get('/:id', authMiddleware, getBookById);
+// Update a book
+bookRouter.put('/:id', authMiddleware, updateBook);
+// Delete a book
+bookRouter.delete('/:id', authMiddleware, deleteBook);
 
-// Crear un libro
-book_router.post('/', async (req, res) => {
-  try {
-    const libro = new Libro(req.body);
-    console.log(libro);
-    const savedLibro = await libro.save();
-    res.status(201).json(savedLibro);
-  } catch (error) {
-    res.status(400).json({ error: (error as Error).message });
-  }
-});
-
-// Leer todos los libros
-book_router.get('/', async (req, res) => {
-  try {
-    const libros = await Libro.find();
-    res.json(libros);
-  } catch (error) {
-    res.status(500).json({ error: (error as Error).message });
-  }
-});
-
-// Leer un libro por su ID
-book_router.get('/:id', async (req, res) => {
-  try {
-    const libro = await Libro.findById(req.params.id);
-    if (libro) {
-      res.json(libro);
-    } else {
-      res.status(404).json({ error: 'Libro no encontrado' });
-    }
-  } catch (error) {
-    res.status(500).json({ error: (error as Error).message });
-  }
-});
-
-// Actualizar un libro por su ID
-book_router.put('/:id', async (req, res) => {
-  try {
-    const libro = await Libro.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true, // Esto asegura que se realice la validación
-    });
-    if (libro) {
-      res.json(libro);
-    } else {
-      res.status(404).json({ error: 'Libro no encontrado' });
-    }
-  } catch (error) {
-    res.status(500).json({ error: (error as Error).message });
-  }
-});
-
-// Eliminar un libro por su ID
-book_router.delete('/:id', async (req, res) => {
-  try {
-    const libro = await Libro.findByIdAndDelete(req.params.id);
-    if (libro) {
-      res.json(libro);
-    } else {
-      res.status(404).json({ error: 'Libro no encontrado' });
-    }
-  } catch (error) {
-    res.status(500).json({ error: (error as Error).message });
-  }
-});
-
-export default book_router;
+export default bookRouter;

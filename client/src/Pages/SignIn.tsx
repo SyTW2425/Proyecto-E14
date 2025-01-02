@@ -51,7 +51,7 @@ export const SignIn: React.FC = () => {
       //Actualizar el estado global de la sesión
       dispatch(setSession({ token: data.token, userObject: data.user }));
 
-      navigate("/"); // Redirigir a la página principal
+      navigate("/main"); // Redirigir a la página principal
     } catch (err: any) {
       setError(err.message || "An error occurred try again later");
     }
