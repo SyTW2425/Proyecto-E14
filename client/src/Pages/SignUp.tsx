@@ -38,6 +38,7 @@ export const SignUp: React.FC = () => {
         const data = await response.json();
         setAvailableGenres(data.genres || []);
       } catch (err) {
+        console.error("Error fetching genres:", err);
         setGeneralError("Could not load genres. Please try again later.");
       }
     };
@@ -128,23 +129,6 @@ export const SignUp: React.FC = () => {
     );
   };
 
-  useEffect(() => {
-    const fetchGenres = async () => {
-      try {
-        const response = await fetch(BACKEND_GENRES_URL);
-        if (!response.ok) {
-          throw new Error("Failed to load genres");
-        }
-        const data = await response.json();
-        setAvailableGenres(data.genres || []);
-      } catch (err) {
-        console.error("Error fetching genres:", err);
-        setGeneralError("Could not load genres. Please try again later.");
-      }
-    };
-    fetchGenres();
-  }, []);
-
   // function setPasswordConfirmation(value: string): void {
   //   throw new Error("Function not implemented.");
   // }
@@ -152,6 +136,22 @@ export const SignUp: React.FC = () => {
   function toggleDropdown(): void {
     setDropdownVisible(!dropdownVisible);
   }
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setDropdownVisible(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <div className="flex w-screen flex-wrap text-slate-800">
