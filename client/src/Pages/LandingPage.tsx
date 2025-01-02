@@ -476,11 +476,11 @@ export default function LandingPage() {
                         y2="5.62385"
                         gradientUnits="userSpaceOnUse"
                       >
-                        <stop stop-color="#49ab81"></stop>
+                        <stop stopColor="#49ab81"></stop>
                         <stop
                           offset="1"
-                          stop-color="#49ab81"
-                          stop-opacity="0"
+                          stopColor="#49ab81"
+                          stopOpacity="0"
                         ></stop>
                       </linearGradient>
                     </defs>
@@ -598,11 +598,11 @@ export default function LandingPage() {
                         y2="5.62385"
                         gradientUnits="userSpaceOnUse"
                       >
-                        <stop stop-color="#49ab81"></stop>
+                        <stop stopColor="#49ab81"></stop>
                         <stop
                           offset="1"
-                          stop-color="#49ab81"
-                          stop-opacity="0"
+                          stopColor="#49ab81"
+                          stopOpacity="0"
                         ></stop>
                       </linearGradient>
                     </defs>
@@ -720,11 +720,11 @@ export default function LandingPage() {
                         y2="5.62385"
                         gradientUnits="userSpaceOnUse"
                       >
-                        <stop stop-color="#49ab81"></stop>
+                        <stop stopColor="#49ab81"></stop>
                         <stop
                           offset="1"
-                          stop-color="#49ab81"
-                          stop-opacity="0"
+                          stopColor="#49ab81"
+                          stopOpacity="0"
                         ></stop>
                       </linearGradient>
                     </defs>
@@ -842,11 +842,11 @@ export default function LandingPage() {
                         y2="5.62385"
                         gradientUnits="userSpaceOnUse"
                       >
-                        <stop stop-color="#49ab81"></stop>
+                        <stop stopColor="#49ab81"></stop>
                         <stop
                           offset="1"
-                          stop-color="#49ab81"
-                          stop-opacity="0"
+                          stopColor="#49ab81"
+                          stopOpacity="0"
                         ></stop>
                       </linearGradient>
                     </defs>
