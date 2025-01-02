@@ -48,25 +48,31 @@ export default function LandingPage() {
         id="hero"
       >
         <div className="container mx-auto px-6 text-center -mb-24">
-          <h2 className="text-6xl font-bold mb-9 text-green1 -mt-12">
+          <h2 className="text-6xl font-bold mb-9 text-green1 -mt-24">
             Welcome to <span className="text-orange-300">Bookies.</span>
           </h2>
-          <p className="text-lg mb-8">
-            Organize your library, track your reading, and unlock the full
-            potential of your literary journey.
-          </p>
           <div className="flex justify-center items-center">
             <img
               src="https://i.pinimg.com/originals/6a/c5/e8/6ac5e88f1a042fc5e8a1ca4cf023be22.jpg"
               alt="Bookies Hero"
-              className="rounded-lg shadow-lg w-3/4 max-w2xl"
+              className="rounded-lg shadow-lg w-3/5 max-w2xl"
             />
           </div>
+          {/* <p className="text-xl mt-8 font-medium text-white mb-8">
+            Organize your library, track your reading, and unlock the full
+            potential of your literary journey.
+          </p> */}
+          <p className="text-xl mt-8 font-medium text-white mb-8">
+            <span className="text-orange-300">Organize</span> your library,
+            <span className="text-orange-300"> track</span> your reading, and
+            <span className="text-orange-300"> unlock</span> the full potential
+            of your literary journey.
+          </p>
           <button
             onClick={() => (window.location.href = "/signup")}
-            className="mt-16 bg-orange-300 text-gray-100 px-8 py-3 rounded-lg font-bold hover:bg-gray-100 hover:text-green1 transition"
+            className="bg-orange-300 text-gray-100 px-8 py-3 rounded-lg font-bold hover:bg-gray-100 hover:text-green1 transition"
           >
-            Get Started for Free
+            Get Started
           </button>
         </div>
       </section>
@@ -85,8 +91,8 @@ export default function LandingPage() {
                   Why Bookies?
                 </h2>
                 <p className="text-gray-600 text-base md:text-lg leading-relaxed md:leading-relaxed max-w-[570px] mx-auto">
-                  There are many variations of passages of Lorem Ipsum available
-                  but the majority have suffered alteration in some form.
+                  Bookies helps you organize your library and track your reading
+                  progress, making your literary journey seamless and enjoyable.
                 </p>
               </div>
             </div>
@@ -118,14 +124,27 @@ export default function LandingPage() {
                         fill="#49ab81"
                       ></path>
                     </svg>
+                    {/* <svg
+                      width="50"
+                      height="50"
+                      viewBox="0 0 50 50"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="m27.2727 8.8069458c-.0004444-.1921501-.0739536-.374876-.1672974-.5403442-1.0859375-1.6054688-1.0859375-3.1005859 0-4.7060547.2070312-.3066406.2280273-.703125.0546875-1.0292969-.1733398-.3271484-.5131835-.53125-.8833007-.53125h-18.7124023c-2.1806641 0-3.9545899 1.7558594-3.9545899 3.9140625v20.171875c0 2.1582031 1.7739258 3.9140625 3.9545899 3.9140625h18.7124023c.5522461 0 1-.4472656 1-1-.0041008-.0050087.0078506-20.1867075-.0040894-20.1930542zm-19.7083129-4.8069458h17.0766602c-.4599609 1.2685547-.4599609 2.5585938 0 3.8271484h-7.1538086c0-1.1025391-.8969727-2-2-2h-4.9228516c-1.1030273 0-2 .8974609-2 2h-1c-1.0776367 0-1.9545898-.8583984-1.9545898-1.9130859-.0000001-1.0556641.876953-1.9140625 1.9545898-1.9140625zm7.9287109 10.8759766c-.0052509-.0028267-1.291873-.9338665-1.2973633-.9375-.699707-.5039062-1.640625-.5048828-2.3413086.0009766l-1.2900391.9326172v-7.044922h4.9228516zm-7.9287109 13.1240234c-1.0776367 0-1.9545898-.8583984-1.9545898-1.9140625v-16.7909546c.5789795.3291626 1.2402954.5321655 1.9545898.5321655h1v5.0449219c0 .7548828.4174805 1.4365234 1.0893555 1.7802734.6708984.3417969 1.4692383.2832031 2.0820312-.1591797l1.2895508-.9326172 1.2905273.9326172h.0004883c.6134195.4429512 1.4121246.5021744 2.081543.1591797.671875-.34375 1.0893555-1.0253906 1.0893555-1.7802734v-5.0449219h7.7895508v18.1728516z"
+                        fill="#49ab81"
+                        transform="scale(1.65)"
+                      ></path>
+                    </svg> */}
                   </div>
                   <h3 className="font-bold text-black text-xl sm:text-2xl lg:text-xl xl:text-2xl mb-5">
-                    SaaS Focused
+                    Accessibility
                   </h3>
                   <p className="text-gray-700 text-base leading-relaxed">
-                    Deleniti nemo temporibus minima iusto, voluptatem sint
-                    ratione eveniet maiores nihil maxime repellendus, dolorum
-                    dolorem atque delectus laborum.
+                    Access your library from anywhere, anytime. Bookies
+                    leverages SaaS technology to keep your data secure and
+                    always available.
                   </p>
                 </div>
               </div>
@@ -155,12 +174,12 @@ export default function LandingPage() {
                     </svg>
                   </div>
                   <h3 className="font-bold text-black text-xl sm:text-2xl lg:text-xl xl:text-2xl mb-5">
-                    Developer Friendly
+                    Built for Efficiency
                   </h3>
                   <p className="text-gray-700 text-base leading-relaxed">
-                    Deleniti nemo temporibus minima iusto, voluptatem sint
-                    ratione eveniet maiores nihil maxime repellendus, dolorum
-                    dolorem atque delectus laborum.
+                    Enjoy a robust and efficient platform designed to handle
+                    your reading needs effortlessly, with tools that grow
+                    alongside you.
                   </p>
                 </div>
               </div>
@@ -194,12 +213,12 @@ export default function LandingPage() {
                     </svg>
                   </div>
                   <h3 className="font-bold text-black text-xl sm:text-2xl lg:text-xl xl:text-2xl mb-5">
-                    Essential Components
+                    Everything You Need
                   </h3>
                   <p className="text-gray-700 text-base leading-relaxed">
-                    Deleniti nemo temporibus minima iusto, voluptatem sint
-                    ratione eveniet maiores nihil maxime repellendus, dolorum
-                    dolorem atque delectus laborum.
+                    From organizing your library to tracking your reading
+                    progress, Bookies provides all the essential tools in one
+                    place.
                   </p>
                 </div>
               </div>
@@ -241,12 +260,11 @@ export default function LandingPage() {
                     </svg>
                   </div>
                   <h3 className="font-bold text-black text-xl sm:text-2xl lg:text-xl xl:text-2xl mb-5">
-                    Easy to Customize
+                    Tailored to Your Needs
                   </h3>
                   <p className="text-gray-700 text-base leading-relaxed">
-                    Deleniti nemo temporibus minima iusto, voluptatem sint
-                    ratione eveniet maiores nihil maxime repellendus, dolorum
-                    dolorem atque delectus laborum.
+                    Adapt Bookies to your reading style. Customize categories,
+                    preferences, and more with just a few clicks.
                   </p>
                 </div>
               </div>
@@ -279,9 +297,8 @@ export default function LandingPage() {
                     High-quality Design
                   </h3>
                   <p className="text-gray-700 text-base leading-relaxed">
-                    Deleniti nemo temporibus minima iusto, voluptatem sint
-                    ratione eveniet maiores nihil maxime repellendus, dolorum
-                    dolorem atque delectus laborum.
+                    Enjoy a modern design and user-friendly interface that makes
+                    organizing and tracking your books a delight.
                   </p>
                 </div>
               </div>
@@ -311,12 +328,11 @@ export default function LandingPage() {
                     </svg>
                   </div>
                   <h3 className="font-bold text-black text-xl sm:text-2xl lg:text-xl xl:text-2xl mb-5">
-                    Regular Updates
+                    Always Evolving
                   </h3>
                   <p className="text-gray-700 text-base leading-relaxed">
-                    Deleniti nemo temporibus minima iusto, voluptatem sint
-                    ratione eveniet maiores nihil maxime repellendus, dolorum
-                    dolorem atque delectus laborum.
+                    Bookies is constantly improving with regular updates based
+                    on the feedback and needs of our reading community.
                   </p>
                 </div>
               </div>
@@ -338,12 +354,12 @@ export default function LandingPage() {
                 data-wow-delay=".1s"
                 style={{ visibility: "visible", animationDelay: "0.1s" }}
               >
-                <h2 className="text-black font-bold text-3xl sm:text-4xl md:text-[45px] mb-5">
+                <h2 className="text-black font-bold text-3xl sm:text-4xl md:text-[45px] mb-5 mt-3">
                   What our users says
                 </h2>
                 <p className="text-gray-800 text-base md:text-lg leading-relaxed md:leading-relaxed max-w-[570px] mx-auto">
-                  There are many variations of passages of Lorem Ipsum available
-                  but the majority have suffered alteration in some form.
+                  Hear from readers who use Bookies to organize their libraries,
+                  track their progress, and rediscover their love for books.
                 </p>
               </div>
             </div>
@@ -432,8 +448,8 @@ export default function LandingPage() {
                   </div>
                 </div>
                 <p className="text-lg font-medium text-gray-500 leading-relaxed pt-8 mt-6 border-t border-[#eee]">
-                  Bookies has completely changed how I manage my reading. It's a
-                  game-changer for book lovers!
+                  "Bookies has completely changed how I manage my reading. It's
+                  a game-changer for book lovers!"
                 </p>
                 <div className="absolute right-0 bottom-0 z-[-1]">
                   <svg
@@ -553,9 +569,9 @@ export default function LandingPage() {
                     </div>
                   </div>
                 </div>
-                <p className="text-lg font-medium text-gray-600 leading-relaxed pt-8 mt-6 border-t border-[#eee]">
-                  The ability to track my progress and make notes is invaluable.
-                  Highly recommended!
+                <p className="text-lg font-medium text-gray-500 leading-relaxed pt-8 mt-6 border-t border-[#eee]">
+                  "The ability to track my progress and make notes is
+                  invaluable. Highly recommended!"
                 </p>
                 <div className="absolute right-0 bottom-0 z-[-1]">
                   <svg
@@ -675,9 +691,9 @@ export default function LandingPage() {
                     </div>
                   </div>
                 </div>
-                <p className="text-lg font-medium text-gray-600 leading-relaxed pt-8 mt-6 border-t border-[#eee]">
-                  Finally, a tool that helps me organize my library and
-                  encourages me to read more! I love it!
+                <p className="text-lg font-medium text-gray-500 leading-relaxed pt-8 mt-6 border-t border-[#eee]">
+                  "Finally, a tool that helps me organize my library and
+                  encourages me to read more! I love it!"
                 </p>
                 <div className="absolute right-0 bottom-0 z-[-1]">
                   <svg
@@ -797,9 +813,9 @@ export default function LandingPage() {
                     </div>
                   </div>
                 </div>
-                <p className="text-lg font-medium text-gray-600 leading-relaxed pt-8 mt-6 border-t border-[#eee]">
-                  Finally, a tool that helps me organize my library and
-                  encourages me to read more! I love it!
+                <p className="text-lg font-medium text-gray-500 leading-relaxed pt-8 mt-6 border-t border-[#eee]">
+                  "Bookies not only helps me keep track of my library but also
+                  inspires me to explore new genres I hadn't considered before."
                 </p>
                 <div className="absolute right-0 bottom-0 z-[-1]">
                   <svg
@@ -845,7 +861,7 @@ export default function LandingPage() {
       {/* Call to Action Section */}
       <section className="py-20 bg-green1 text-white text-center" id="cta">
         <div className="container mx-auto px-6">
-          <h3 className="text-4xl font-bold mb-6">
+          <h3 className="text-4xl font-bold mb-6 -mt-2">
             Ready to Start Your Journey?
           </h3>
           <p className="text-lg mb-6">
@@ -854,7 +870,7 @@ export default function LandingPage() {
           </p>
           <button
             onClick={() => (window.location.href = "/signup")}
-            className="bg-orange-300 text-gray-100 px-8 py-3 rounded-lg font-bold hover:bg-gray-100 hover:text-green1 transition"
+            className="bg-orange-300 text-gray-100 px-8 py-3 mb-2 rounded-lg font-bold hover:text-green1 hover:bg-gray-100 transition"
           >
             Sign Up Now
           </button>
