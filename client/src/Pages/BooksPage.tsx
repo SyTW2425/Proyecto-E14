@@ -46,7 +46,7 @@ const FilterDropdown: React.FC<{
   return (
     <div
       ref={dropdownRef}
-      className="relative inline-block text-left w-full sm:w-1/6"
+      className="relative inline-block text-left w-full sm:w-1/6 shadow-sm rounded-md"
     >
       <button
         onClick={toggleDropdown}
@@ -209,7 +209,7 @@ export const BooksPage: React.FC = () => {
                 placeholder="Search by title..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full sm:w-1/2 sm:mb-0 sm:mr-4 p-2 border border-green1 rounded focus:outline-none focus:ring-1 focus:ring-green2"
+                className="w-full sm:w-1/2 sm:mb-0 sm:mr-4 p-2 border border-green1 rounded focus:outline-none focus:ring-1 focus:ring-green2 shadow-sm"
               />
               <FilterDropdown
                 options={genres}
