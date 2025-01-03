@@ -83,6 +83,6 @@ describe("SignIn Component", () => {
     expect(
       await screen.findByRole("button", { name: /Sign in/i })
     ).toBeInTheDocument();
-    expect(mockNavigate).toHaveBeenCalledWith("/main");
+    expect(mockNavigate).toHaveBeenCalledWith("/books");
   });
 });
