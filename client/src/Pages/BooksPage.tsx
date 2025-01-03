@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaPlus, FaBook, FaUser } from "react-icons/fa";
+import { FaPlus, FaBook, FaUser, FaSearchPlus } from "react-icons/fa";
+import { jwtDecode} from "jwt-decode";
 
 interface Book {
   _id: string;
@@ -77,12 +78,46 @@ const FilterDropdown: React.FC<{
   );
 };
 
-export const MainPage: React.FC = () => {
+export const BooksPage: React.FC = () => {
   const navigate = useNavigate();
   const [books, setBooks] = useState<Book[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedGenre, setSelectedGenre] = useState<string>("");
   const [hasShadow, setHasShadow] = useState(false);
+
+  const addBookToLibrary = async (bookId: string) => {
+    const token = localStorage.getItem("token"); // Obtén el token del localStorage
+  
+    if (!token) {
+      console.error("User is not authenticated");
+      return;
+    }
+  
+    try {
+      // Decodifica el token para obtener el usuarioId
+      const decoded: { id: string } = jwtDecode(token);
+      const usuarioId = decoded.id;
+  
+      const response = await fetch("http://localhost:4200/userbooks", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Asegúrate de incluir este encabezado
+        },
+        body: JSON.stringify({ usuarioId, libroId: bookId }), // Envía usuarioId y libroId
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Failed to add book:", errorData.error);
+      } else {
+        const data = await response.json();
+        console.log("Book added successfully:", data);
+      }
+    } catch (error) {
+      console.error("Error adding book to library:", error);
+    }
+  };
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -138,9 +173,9 @@ export const MainPage: React.FC = () => {
       <nav className="fixed top-0 left-0 h-screen w-16 bg-green1 text-white flex flex-col justify-center items-center">
         <button
           className="mb-6 hover:bg-green2 p-2 rounded -mt-4"
-          onClick={() => navigate("/main")}
+          onClick={() => navigate("/books")}
         >
-          <FaPlus size={24} />
+          <FaSearchPlus size={24} />
         </button>
         <button
           className="mb-6 hover:bg-green2 p-2 rounded"
@@ -200,7 +235,7 @@ export const MainPage: React.FC = () => {
                   />
                   {/* Add Button */}
                   <button
-                    onClick={() => console.log(`Added ${book.titulo} to library`)}
+                    onClick={() => addBookToLibrary(book._id)}
                     className="absolute inset-0 flex items-center justify-center bg-transparent text-green1 opacity-[0.01] transition-opacity duration-300 group-hover:opacity-100"
                   >
                     <div className="bg-green1 p-3 rounded-full">
@@ -234,4 +269,4 @@ export const MainPage: React.FC = () => {
   );
 };
 
-export default MainPage;
+export default BooksPage;
