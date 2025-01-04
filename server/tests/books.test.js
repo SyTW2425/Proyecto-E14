@@ -34,13 +34,12 @@ describe('Books Endpoints', () => {
 
   afterEach(async () => {
     const collections = mongoose.connection.collections;
-
     for (const key in collections) {
-      if (collections[key]) {
-        await collections[key].deleteMany({});
-      }
+      const collection = collections[key];
+      await collection.deleteMany({}); // Limpia todos los documentos de cada colección
     }
   });
+  
 
   afterAll(async () => {
     await mongoose.disconnect();
