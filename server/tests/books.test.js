@@ -112,6 +112,10 @@ describe('Books Endpoints', () => {
 
       const post_response = await request(app).post('/libros').set('Authorization', `Bearer ${token}`).send(mockBook);
 
+      expect(post_response.status).toBe(201);
+      expect(post_response.body).toHaveProperty('book');
+      expect(post_response.body.book).toHaveProperty('_id');
+
       const mockBookID =  post_response.body.book._id;
 
       const response = await request(app).get(`/libros/${mockBookID}`).set('Authorization', `Bearer ${token}`);
@@ -138,6 +142,10 @@ describe('Books Endpoints', () => {
     it('should update a book', async () => {
       
       const post_response = await request(app).post('/libros').set('Authorization', `Bearer ${token}`).send(mockBook);
+
+      expect(post_response.status).toBe(201);
+      expect(post_response.body).toHaveProperty('book');
+      expect(post_response.body.book).toHaveProperty('_id');
 
       const mockBookID =  post_response.body.book._id;
 
