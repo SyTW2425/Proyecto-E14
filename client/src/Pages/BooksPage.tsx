@@ -170,7 +170,7 @@ export const BooksPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-green-100 flex">
       {/* Sidebar */}
-      <nav className="fixed top-0 left-0 h-screen w-16 bg-green1 text-white flex flex-col justify-center items-center">
+      <nav className="fixed top-0 left-0 h-screen w-16 bg-green1 text-white flex flex-col justify-center items-center rounded-r-xl">
         <button
           className="mb-6 hover:bg-green2 p-2 rounded -mt-4"
           onClick={() => navigate("/books")}
@@ -196,7 +196,7 @@ export const BooksPage: React.FC = () => {
         <main className="py-2">
           {/* Sticky Header with Shadow */}
           <div
-            className={`sticky top-0 z-20 bg-green-100 transition-shadow duration-300 ${
+            className={`sticky top-0 z-20 bg-green-100 transition-shadow duration-300 rounded-b-md ${
               hasShadow ? "shadow-md" : ""
             }`}
           >
@@ -224,7 +224,7 @@ export const BooksPage: React.FC = () => {
             {filteredBooks.map((book) => (
               <div
                 key={book._id}
-                className="relative max-w-sm rounded overflow-hidden bg-green-50 shadow-md"
+                className="relative max-w-sm rounded-xl overflow-hidden bg-green-50 shadow-md"
               >
                 {/* Book Cover (Hover for blur and Add button) */}
                 <div className="relative group">

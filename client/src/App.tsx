@@ -6,9 +6,7 @@ import SignIn from "./Pages/SignIn";
 import LandingPage from "./Pages/LandingPage";
 import BooksPage from "./Pages/BooksPage";
 import UserLibraryPage from "./Pages/UserLibraryPage";
-//import BooksList from "./components/books/booksList";
-//import SignUpForm from "./features/signUpIn/SignUpForm";
-//import SignInForm from "./features/signUpIn/SignInForm";
+import { BookProgressPage } from "./Pages/BookProgressPage";
 
 function App() {
   return (
@@ -19,8 +17,7 @@ function App() {
         <Route path="/signin" element={<SignIn />} />
         <Route path="/books" element={<BooksPage />} />
         <Route path="/library" element={<UserLibraryPage />} />
-        {/*<Route path="/sign-up" element={<h1>Sign Up</h1>} /> */}
-        {/*<Route path="/sign-in" element={<h1>Sign In</h1>} /> */}
+        <Route path="/library/:id" element={<BookProgressPage />} />
       </Routes>
     </Router>
   );
