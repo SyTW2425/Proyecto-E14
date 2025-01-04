@@ -36,7 +36,9 @@ describe('Books Endpoints', () => {
     const collections = mongoose.connection.collections;
 
     for (const key in collections) {
-      await collections[key].deleteMany({}); // Limpia todos los documentos
+      if (collections[key]) {
+        await collections[key].deleteMany({});
+      }
     }
   });
 
