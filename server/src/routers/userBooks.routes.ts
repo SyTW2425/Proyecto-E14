@@ -8,6 +8,7 @@ import {
   removeNote,
   getUserBookDetails,
   removeUserBook,
+  updateNote
 } from '../controllers/userBook.controller.js';
 import { authMiddleware } from '../middlewares/auth.middleware.js';
 
@@ -20,7 +21,9 @@ userBookRouter.patch('/progress', authMiddleware, updatePagesRead);
 // Update reading status
 userBookRouter.patch('/status', authMiddleware, updateReadingStatus);
 // Add a note
-userBookRouter.patch('/notes', authMiddleware, addNote);
+userBookRouter.post('/notes', authMiddleware, addNote);
+// Update a note
+userBookRouter.patch('/notes', authMiddleware, updateNote);
 // Get all books in a user's library
 userBookRouter.get('/:usuarioId', authMiddleware, getUserBooks);
 // Remove a note

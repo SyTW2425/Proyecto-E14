@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { FaSearchPlus, FaBook, FaUser } from "react-icons/fa";
+import { FaSearchPlus, FaBook, FaUser, FaTrash } from "react-icons/fa";
 
 interface Book {
   _id: string;
@@ -12,10 +12,19 @@ interface Book {
   portada: string;
 }
 
+interface Note {
+  _id: string;
+  content: string;
+}
+
 export const BookProgressPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [book, setBook] = useState<Book | null>(null);
+  const [notes, setNotes] = useState<Note[]>([]);
+  const [newNote, setNewNote] = useState<string>("");
+  const [editNoteId, setEditNoteId] = useState<string | null>(null);
+  const [editNoteContent, setEditNoteContent] = useState<string>("");
   const [currentPageInput, setCurrentPageInput] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -27,7 +36,7 @@ export const BookProgressPage: React.FC = () => {
       const usuarioId = localStorage.getItem("usuarioId");
 
       if (!token || !usuarioId) {
-        console.error("Authentication error: Token or User ID not found.");
+        showError("Authentication error: Token or User ID not found.");
         navigate("/signin");
         return;
       }
@@ -45,12 +54,12 @@ export const BookProgressPage: React.FC = () => {
 
         const data = await response.json();
         setBook(data.libroId);
+        setNotes(data.notas || []);
         setCurrentPage(data.paginasLeidas || 0);
         setCurrentPageInput((data.paginasLeidas || 0).toString());
         setError(null);
       } catch (err) {
-        console.error("Error fetching book details:", err);
-        setError("Failed to load book details. Please try again.");
+        showError("Failed to load book details. Please try again.");
       } finally {
         setIsLoading(false);
       }
@@ -64,7 +73,7 @@ export const BookProgressPage: React.FC = () => {
     const usuarioId = localStorage.getItem("usuarioId");
 
     if (!token || !usuarioId) {
-      setError("Authentication error: Token or User ID not found.");
+      showError("Authentication error: Token or User ID not found.");
       return;
     }
 
@@ -90,10 +99,10 @@ export const BookProgressPage: React.FC = () => {
 
       const updatedDetails = await response.json();
       setCurrentPage(updatedDetails.userBook.paginasLeidas || 0);
+      setCurrentPageInput(updatedDetails.userBook.paginasLeidas.toString());
       setError(null);
     } catch (err) {
-      console.error("Error updating progress:", err);
-      setError("Error updating progress. Please try again.");
+      showError("Error updating progress. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -104,7 +113,7 @@ export const BookProgressPage: React.FC = () => {
       const pageNumber = parseInt(currentPageInput, 10);
 
       if (isNaN(pageNumber) || pageNumber < 0 || pageNumber > (book?.paginas || 0)) {
-        setError(
+        showError(
           `Please enter a number between 0 and ${book?.paginas || "the total pages"}`
         );
         return;
@@ -112,6 +121,104 @@ export const BookProgressPage: React.FC = () => {
 
       setCurrentPage(pageNumber);
       updateProgressInBackend(pageNumber);
+    }
+  };
+
+  const addNote = async () => {
+    const token = localStorage.getItem("token");
+    const usuarioId = localStorage.getItem("usuarioId");
+
+    if (!token || !usuarioId || !newNote.trim()) {
+      showError("Please enter a valid note.");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:4200/userbooks/notes", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ usuarioId, libroId: id, content: newNote.trim() }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to add note");
+      }
+
+      const updatedDetails = await response.json();
+      setNotes(updatedDetails.userBook.notas || []);
+      setNewNote("");
+    } catch (err) {
+      showError("Failed to add note. Please try again.");
+    }
+  };
+
+  const deleteNote = async (noteId: string) => {
+    const token = localStorage.getItem("token");
+    const usuarioId = localStorage.getItem("usuarioId");
+
+    if (!token || !usuarioId) {
+      showError("Authentication error.");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:4200/userbooks/notes", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ usuarioId, libroId: id, notaId: noteId }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete note");
+      }
+
+      const updatedDetails = await response.json();
+      setNotes(updatedDetails.userBook.notas || []);
+    } catch (err) {
+      showError("Failed to delete note. Please try again.");
+    }
+  };
+
+  const editNote = async () => {
+    const token = localStorage.getItem("token");
+    const usuarioId = localStorage.getItem("usuarioId");
+
+    if (!token || !usuarioId || !editNoteContent.trim()) {
+      showError("Please enter a valid note.");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:4200/userbooks/notes", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          usuarioId,
+          libroId: id,
+          notaId: editNoteId,
+          content: editNoteContent.trim(),
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to edit note");
+      }
+
+      const updatedDetails = await response.json();
+      setNotes(updatedDetails.userBook.notas || []);
+      setEditNoteId(null);
+      setEditNoteContent("");
+    } catch (err) {
+      showError("Failed to edit note. Please try again.");
     }
   };
 
@@ -131,6 +238,13 @@ export const BookProgressPage: React.FC = () => {
     if (currentPage === 0) return "Pending";
     if (currentPage === book?.paginas) return "Completed";
     return "In Progress";
+  };
+
+  const showError = (message: string) => {
+    setError(message);
+    setTimeout(() => {
+      setError(null);
+    }, 5000);
   };
 
   return (
@@ -159,7 +273,6 @@ export const BookProgressPage: React.FC = () => {
 
       {/* Main content */}
       <div className="ml-16 w-full min-h-screen bg-green-100 py-8 px-4 sm:px-8">
-        {error && <p className="text-red-500 mb-4">{error}</p>}
         {isLoading && (
           <div className="flex justify-center items-center mb-4">
             <div className="animate-spin rounded-full h-8 w-8 border-t-4 border-b-4 border-green1"></div>
@@ -194,12 +307,12 @@ export const BookProgressPage: React.FC = () => {
               </div>
             </div>
 
+            {/* Reading Progress */}
             <div className="bg-white shadow-md rounded-lg p-6">
               <div className="flex items-center mb-6">
                 <h3 className="text-xl font-bold text-gray-700 flex-shrink-0 mr-6">
                   Reading Progress
                 </h3>
-                {/* Progress Bar */}
                 <div className="flex-grow bg-gray-300 h-6 rounded-full overflow-hidden shadow-inner">
                   <div
                     className={`h-full ${getProgressColor(
@@ -215,7 +328,6 @@ export const BookProgressPage: React.FC = () => {
                   <strong>Progress:</strong> {currentPage} / {book.paginas} pages read (
                   {calculateProgress().toFixed(2)}%)
                 </p>
-                {/* Page Input */}
                 <div className="sm:mt-0 flex items-center">
                   <p className="text-gray-700 text-base sm:text-lg mr-4">
                     <strong>Pages read:</strong>
@@ -231,6 +343,106 @@ export const BookProgressPage: React.FC = () => {
                   />
                 </div>
               </div>
+            </div>
+
+            {/* Notes Section */}
+            <div className="bg-white shadow-md rounded-lg p-6">
+              <h3 className="text-xl font-bold mb-4">Your Notes</h3>
+              <div className="mb-4 flex gap-2">
+                <input
+                  type="text"
+                  value={newNote}
+                  onChange={(e) => setNewNote(e.target.value)}
+                  placeholder="Add a note..."
+                  className="flex-grow p-2 border border-green1 rounded"
+                />
+                <button
+                  onClick={addNote}
+                  className="bg-green1 text-white px-4 py-2 rounded"
+                >
+                  Add Note
+                </button>
+              </div>
+
+              <div className="space-y-4">
+  {notes.map((note) => (
+    <div
+      key={note._id}
+      className="bg-green-50 p-4 rounded shadow-md flex justify-between items-center"
+    >
+      {editNoteId === note._id ? (
+        <div className="flex-grow">
+          <input
+            type="text"
+            value={editNoteContent}
+            onChange={(e) => setEditNoteContent(e.target.value)}
+            className="w-full p-2 border border-green1 rounded"
+          />
+        </div>
+      ) : (
+        <p className="flex-grow mr-5">{note.content}</p>
+      )}
+
+      <div className="flex gap-2">
+        {editNoteId === note._id ? (
+          <>
+            <button
+              onClick={editNote}
+              className="bg-green1 text-white px-3 py-1 rounded hover:bg-green2 transition ml-4 mr-1"
+            >
+              Save
+            </button>
+            <button
+              onClick={() => {
+                setEditNoteId(null);
+                setEditNoteContent("");
+              }}
+              className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-700 transition"
+            >
+              Cancel
+            </button>
+          </>
+        ) : (
+          <>
+            <button
+              onClick={() => {
+                setEditNoteId(note._id);
+                setEditNoteContent(note.content);
+              }}
+              className="bg-green1 text-white px-3 py-1 rounded hover:bg-green2 transition"
+            >
+              Edit
+            </button>
+            <button
+              onClick={() => deleteNote(note._id)}
+              className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-700 transition flex items-center gap-1"
+            >
+              <FaTrash />
+            </button>
+          </>
+        )}
+      </div>
+    </div>
+  ))}
+</div>
+
+            </div>
+          </div>
+        )}
+
+        {/* Error Alert */}
+        {error && (
+          <div className="fixed bottom-4 right-4 z-50 flex items-center p-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 shadow-lg">
+            <svg
+              className="flex-shrink-0 inline w-4 h-4 me-3"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+            </svg>
+            <div>
+              <span className="font-medium">Error:</span> {error}
             </div>
           </div>
         )}

@@ -87,21 +87,26 @@ export const addNote = async (req: Request, res: Response) => {
   try {
     const { usuarioId, libroId, content } = req.body;
 
+    if (!content || content.trim() === '') {
+      return res.status(400).json({ error: 'Note content cannot be empty' });
+    }
+
     const userBook = await UserBook.findOneAndUpdate(
       { usuarioId, libroId },
       { $push: { notas: { content } } },
-      { new: true },
+      { new: true, runValidators: true }
     );
 
     if (!userBook) {
       return res.status(404).json({ error: 'Book not found in user library' });
     }
 
-    res.status(200).json({ message: 'Note added', userBook });
+    res.status(201).json({ message: 'Note added', userBook });
   } catch (error) {
     res.status(500).json({ error: (error as Error).message });
   }
 };
+
 
 // Remove a note from a book
 export const removeNote = async (req: Request, res: Response) => {
@@ -111,7 +116,7 @@ export const removeNote = async (req: Request, res: Response) => {
     const userBook = await UserBook.findOneAndUpdate(
       { usuarioId, libroId },
       { $pull: { notas: { _id: notaId } } },
-      { new: true },
+      { new: true }
     );
 
     if (!userBook) {
@@ -119,6 +124,31 @@ export const removeNote = async (req: Request, res: Response) => {
     }
 
     res.status(200).json({ message: 'Note removed', userBook });
+  } catch (error) {
+    res.status(500).json({ error: (error as Error).message });
+  }
+};
+
+// Update a note in a book
+export const updateNote = async (req: Request, res: Response) => {
+  try {
+    const { usuarioId, libroId, notaId, content } = req.body;
+
+    if (!content || content.trim() === '') {
+      return res.status(400).json({ error: 'Note content cannot be empty' });
+    }
+
+    const userBook = await UserBook.findOneAndUpdate(
+      { usuarioId, libroId, 'notas._id': notaId },
+      { $set: { 'notas.$.content': content } },
+      { new: true, runValidators: true }
+    );
+
+    if (!userBook) {
+      return res.status(404).json({ error: 'Book or note not found in user library' });
+    }
+
+    res.status(200).json({ message: 'Note updated', userBook });
   } catch (error) {
     res.status(500).json({ error: (error as Error).message });
   }

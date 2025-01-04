@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaPlus, FaBook, FaUser, FaSearchPlus } from "react-icons/fa";
-import { jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 
 interface Book {
   _id: string;
@@ -84,38 +84,46 @@ export const BooksPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedGenre, setSelectedGenre] = useState<string>("");
   const [hasShadow, setHasShadow] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const addBookToLibrary = async (bookId: string) => {
-    const token = localStorage.getItem("token"); // Obtén el token del localStorage
-  
+    const token = localStorage.getItem("token");
+
     if (!token) {
       console.error("User is not authenticated");
       return;
     }
-  
+
     try {
-      // Decodifica el token para obtener el usuarioId
       const decoded: { id: string } = jwtDecode(token);
       const usuarioId = decoded.id;
-  
+
       const response = await fetch("http://localhost:4200/userbooks", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // Asegúrate de incluir este encabezado
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ usuarioId, libroId: bookId }), // Envía usuarioId y libroId
+        body: JSON.stringify({ usuarioId, libroId: bookId }),
       });
-  
+
       if (!response.ok) {
         const errorData = await response.json();
-        console.error("Failed to add book:", errorData.error);
+        if (errorData.error === "Book already exists in user library") {
+          setErrorMessage("This book is already in your library!");
+        } else {
+          setErrorMessage("Failed to add book. Please try again.");
+        }
+        setTimeout(() => setErrorMessage(null), 5000); // Hide error after 5 seconds
       } else {
-        const data = await response.json();
-        console.log("Book added successfully:", data);
+        setSuccessMessage("Book added to library successfully!");
+        setTimeout(() => setSuccessMessage(null), 5000); // Hide success after 5 seconds
       }
     } catch (error) {
       console.error("Error adding book to library:", error);
+      setErrorMessage("An unexpected error occurred. Please try again.");
+      setTimeout(() => setErrorMessage(null), 5000);
     }
   };
 
@@ -194,7 +202,6 @@ export const BooksPage: React.FC = () => {
       {/* Main Content */}
       <div className="flex-grow ml-16">
         <main className="py-2">
-          {/* Sticky Header with Shadow */}
           <div
             className={`sticky top-0 z-20 bg-green-100 transition-shadow duration-300 rounded-b-md ${
               hasShadow ? "shadow-md" : ""
@@ -219,21 +226,18 @@ export const BooksPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Book Grid */}
           <div className="max-w-screen-2xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 rounded-lg p-6 bg-green-100">
             {filteredBooks.map((book) => (
               <div
                 key={book._id}
                 className="relative max-w-sm rounded-xl overflow-hidden bg-green-50 shadow-md"
               >
-                {/* Book Cover (Hover for blur and Add button) */}
                 <div className="relative group">
                   <img
                     className="w-47 h-96 object-cover rounded-lg mt-4 mx-auto transition-all duration-300 group-hover:blur-[2px]"
                     src={book.portada}
                     alt={`${book.titulo} cover`}
                   />
-                  {/* Add Button */}
                   <button
                     onClick={() => addBookToLibrary(book._id)}
                     className="absolute inset-0 flex items-center justify-center bg-transparent text-green1 opacity-[0.01] transition-opacity duration-300 group-hover:opacity-100"
@@ -243,10 +247,7 @@ export const BooksPage: React.FC = () => {
                     </div>
                   </button>
                 </div>
-
-                {/* Card Details (Hover for synopsis) */}
                 <div className="relative group">
-                  {/* Book Details */}
                   <div className="px-6 py-4 transition-opacity duration-300 group-hover:opacity-0">
                     <h3 className="font-bold text-xl mb-2">{book.titulo}</h3>
                     <p className="text-gray-700 text-base">By {book.autor}</p>
@@ -254,8 +255,6 @@ export const BooksPage: React.FC = () => {
                       <strong>Genre:</strong> {book.genero}
                     </p>
                   </div>
-
-                  {/* Sinopsis Overlay */}
                   <div className="absolute inset-0 bg-green1 bg-opacity-75 text-white flex items-center justify-center text-center px-4 p-2 rounded-lg opacity-[0.01] transition-opacity duration-150 group-hover:opacity-100 m-3">
                     <p className="text-sm">{book.sinopsis}</p>
                   </div>
@@ -265,8 +264,43 @@ export const BooksPage: React.FC = () => {
           </div>
         </main>
       </div>
+
+      {/* Success Alert */}
+      {successMessage && (
+        <div className="fixed bottom-4 right-4 z-50 flex items-center p-4 text-sm text-green-800 border border-green-300 rounded-lg bg-green-50 shadow-lg">
+          <svg
+            className="flex-shrink-0 inline w-4 h-4 me-3"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path d="M16.707 4.293a1 1 0 0 0-1.414 0L10 9.586 8.707 8.293a1 1 0 0 0-1.414 1.414l2 2a1 1 0 0 0 1.414 0l6-6a1 1 0 0 0 0-1.414Z" />
+          </svg>
+          <div>
+            <span className="font-medium">Success:</span> {successMessage}
+          </div>
+        </div>
+      )}
+
+      {/* Error Alert */}
+      {errorMessage && (
+        <div className="fixed bottom-4 right-4 z-50 flex items-center p-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 shadow-lg">
+          <svg
+            className="flex-shrink-0 inline w-4 h-4 me-3"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+          </svg>
+          <div>
+            <span className="font-medium">Error:</span> {errorMessage}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
 export default BooksPage;
+
