@@ -1,6 +1,6 @@
-
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { FaSearchPlus, FaBook, FaUser } from "react-icons/fa";
 
 interface Book {
   _id: string;
@@ -134,79 +134,107 @@ export const BookProgressPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-green-100 py-8 px-4 sm:px-8">
-      {error && <p className="text-red-500 mb-4">{error}</p>}
-      {isLoading && (
-        <div className="flex justify-center items-center mb-4">
-          <div className="animate-spin rounded-full h-8 w-8 border-t-4 border-b-4 border-green1"></div>
-        </div>
-      )}
-      {book && (
-        <div className="max-w-screen-lg mx-auto space-y-8">
-          {/* Book Details Card */}
-          <div className="bg-white shadow-md rounded-lg p-6 flex flex-col sm:flex-row">
-            <img
-              src={book.portada}
-              alt={`${book.titulo} cover`}
-              className="w-full sm:w-48 h-auto object-cover rounded-lg"
-            />
-            <div className="sm:ml-6 flex flex-col justify-center sm:mt-0">
-              <h2 className="text-2xl font-bold mb-2 mt-2">{book.titulo}</h2>
-              <p className="text-lg text-gray-700 mb-1">
-                <strong>Author:</strong> {book.autor}
-              </p>
-              <p className="text-lg text-gray-700 mb-1">
-                <strong>Genre:</strong> {book.genero}
-              </p>
-              <p className="text-lg text-gray-700 mb-1">
-                <strong>Pages:</strong> {book.paginas}
-              </p>
-              <p className="text-lg text-gray-700 mb-1">
-                <strong>Status:</strong> {getReadingStatus()}
-              </p>
-              <p className="text-lg text-gray-700">
-                <strong>Synopsis:</strong> {book.sinopsis}
-              </p>
-            </div>
-          </div>
+    <div className="flex">
+      {/* Sidebar */}
+      <nav className="fixed top-0 left-0 h-screen w-16 bg-green1 text-white flex flex-col justify-center items-center rounded-r-xl z-50">
+        <button
+          className="mb-6 hover:bg-green2 p-2 rounded -mt-4"
+          onClick={() => navigate("/books")}
+        >
+          <FaSearchPlus size={24} />
+        </button>
+        <button
+          className="mb-6 hover:bg-green2 p-2 rounded"
+          onClick={() => navigate("/library")}
+        >
+          <FaBook size={24} />
+        </button>
+        <button
+          className="hover:bg-green2 p-2 rounded"
+          onClick={() => navigate("/profile")}
+        >
+          <FaUser size={24} />
+        </button>
+      </nav>
 
-          {/* Progress Card */}
-          <div className="bg-white shadow-md rounded-lg p-6">
-            <div className="flex items-center mb-4">
-              <h3 className="text-2xl font-bold flex-shrink-0 mr-4">
-                Reading Progress
-              </h3>
-              {/* Progress Bar */}
-              <div className="flex-grow bg-gray-300 h-6 rounded-full overflow-hidden">
-                <div
-                  className={`h-full ${getProgressColor(
-                    calculateProgress()
-                  )} transition-all duration-300`}
-                  style={{ width: `${calculateProgress()}%` }}
-                ></div>
+      {/* Main content */}
+      <div className="ml-16 w-full min-h-screen bg-green-100 py-8 px-4 sm:px-8">
+        {error && <p className="text-red-500 mb-4">{error}</p>}
+        {isLoading && (
+          <div className="flex justify-center items-center mb-4">
+            <div className="animate-spin rounded-full h-8 w-8 border-t-4 border-b-4 border-green1"></div>
+          </div>
+        )}
+        {book && (
+          <div className="max-w-screen-lg mx-auto space-y-8">
+            {/* Book Details Card */}
+            <div className="bg-white shadow-md rounded-lg p-6 flex flex-col sm:flex-row">
+              <img
+                src={book.portada}
+                alt={`${book.titulo} cover`}
+                className="w-full sm:w-48 h-auto object-cover rounded-lg"
+              />
+              <div className="sm:ml-6 flex flex-col justify-center sm:mt-0">
+                <h2 className="text-2xl font-bold mb-2 mt-2">{book.titulo}</h2>
+                <p className="text-lg text-gray-700 mb-1">
+                  <strong>Author:</strong> {book.autor}
+                </p>
+                <p className="text-lg text-gray-700 mb-1">
+                  <strong>Genre:</strong> {book.genero}
+                </p>
+                <p className="text-lg text-gray-700 mb-1">
+                  <strong>Pages:</strong> {book.paginas}
+                </p>
+                <p className="text-lg text-gray-700 mb-1">
+                  <strong>Status:</strong> {getReadingStatus()}
+                </p>
+                <p className="text-lg text-gray-700">
+                  <strong>Synopsis:</strong> {book.sinopsis}
+                </p>
               </div>
             </div>
 
-            <p className="text-gray-700 mb-4">
-              {currentPage} / {book.paginas} pages read ({calculateProgress().toFixed(2)}%)
-            </p>
+            <div className="bg-white shadow-md rounded-lg p-6">
+              <div className="flex items-center mb-6">
+                <h3 className="text-xl font-bold text-gray-700 flex-shrink-0 mr-6">
+                  Reading Progress
+                </h3>
+                {/* Progress Bar */}
+                <div className="flex-grow bg-gray-300 h-6 rounded-full overflow-hidden shadow-inner">
+                  <div
+                    className={`h-full ${getProgressColor(
+                      calculateProgress()
+                    )} transition-all duration-300`}
+                    style={{ width: `${calculateProgress()}%` }}
+                  ></div>
+                </div>
+              </div>
 
-            {/* Page Input */}
-            <label htmlFor="currentPage" className="block text-gray-700 mb-2">
-              Enter your current page and press Enter:
-            </label>
-            <input
-              type="number"
-              id="currentPage"
-              value={currentPageInput}
-              onChange={(e) => setCurrentPageInput(e.target.value)}
-              onKeyDown={handlePageInputKeyPress}
-              disabled={isLoading}
-              className="p-2 border border-green1 rounded w-full"
-            />
+              <div className="flex flex-col items-start sm:flex-row sm:justify-between sm:items-center">
+                <p className="text-gray-700 text-base sm:text-lg">
+                  <strong>Progress:</strong> {currentPage} / {book.paginas} pages read (
+                  {calculateProgress().toFixed(2)}%)
+                </p>
+                {/* Page Input */}
+                <div className="sm:mt-0 flex items-center">
+                  <p className="text-gray-700 text-base sm:text-lg mr-4">
+                    <strong>Pages read:</strong>
+                  </p>
+                  <input
+                    type="number"
+                    id="currentPage"
+                    value={currentPageInput}
+                    onChange={(e) => setCurrentPageInput(e.target.value)}
+                    onKeyDown={handlePageInputKeyPress}
+                    disabled={isLoading}
+                    className="p-2 border border-green-300 rounded-md shadow-sm focus:ring focus:ring-green-200 focus:border-green-400 w-24 items-center"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
