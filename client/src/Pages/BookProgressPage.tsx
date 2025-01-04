@@ -1,6 +1,6 @@
+
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 interface Book {
   _id: string;
@@ -16,58 +16,131 @@ export const BookProgressPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [book, setBook] = useState<Book | null>(null);
-  const [readingStatus, setReadingStatus] = useState<string>("Pending");
+  const [currentPageInput, setCurrentPageInput] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchBook = async () => {
+    const fetchBookDetails = async () => {
       const token = localStorage.getItem("token");
-  
-      if (!token) {
-        console.error("Token not found. Redirecting to Sign In...");
+      const usuarioId = localStorage.getItem("usuarioId");
+
+      if (!token || !usuarioId) {
+        console.error("Authentication error: Token or User ID not found.");
         navigate("/signin");
         return;
       }
-  
+
       try {
-        const response = await fetch(`http://localhost:4200/libros/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`, // Incluye el token en la cabecera
-          },
-        });
-  
+        setIsLoading(true);
+        const response = await fetch(
+          `http://localhost:4200/userbooks/${usuarioId}/${id}`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+
         if (!response.ok) {
           throw new Error("Failed to fetch book details");
         }
-  
+
         const data = await response.json();
-        setBook(data);
-      } catch (error) {
-        console.error("Error fetching book:", error);
+        setBook(data.libroId);
+        setCurrentPage(data.paginasLeidas || 0);
+        setCurrentPageInput((data.paginasLeidas || 0).toString());
+        setError(null);
+      } catch (err) {
+        console.error("Error fetching book details:", err);
+        setError("Failed to load book details. Please try again.");
+      } finally {
+        setIsLoading(false);
       }
     };
-  
-    fetchBook();
-  }, [id, navigate]);
-  
 
-  const updateProgress = (page: number) => {
-    setCurrentPage(page);
+    fetchBookDetails();
+  }, [id, navigate]);
+
+  const updateProgressInBackend = async (page: number) => {
+    const token = localStorage.getItem("token");
+    const usuarioId = localStorage.getItem("usuarioId");
+
+    if (!token || !usuarioId) {
+      setError("Authentication error: Token or User ID not found.");
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      const response = await fetch("http://localhost:4200/userbooks/progress", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          usuarioId,
+          libroId: id,
+          paginasLeidas: page,
+          totalPaginas: book?.paginas,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update progress");
+      }
+
+      const updatedDetails = await response.json();
+      setCurrentPage(updatedDetails.userBook.paginasLeidas || 0);
+      setError(null);
+    } catch (err) {
+      console.error("Error updating progress:", err);
+      setError("Error updating progress. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handlePageInputKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      const pageNumber = parseInt(currentPageInput, 10);
+
+      if (isNaN(pageNumber) || pageNumber < 0 || pageNumber > (book?.paginas || 0)) {
+        setError(
+          `Please enter a number between 0 and ${book?.paginas || "the total pages"}`
+        );
+        return;
+      }
+
+      setCurrentPage(pageNumber);
+      updateProgressInBackend(pageNumber);
+    }
   };
 
   const calculateProgress = (): number => {
-    if (!book) return 0;
+    if (!book || currentPage < 0) return 0;
     return Math.min((currentPage / book.paginas) * 100, 100);
   };
 
   const getProgressColor = (progress: number): string => {
+    if (progress === 100) return "bg-purple-500";
     if (progress < 33) return "bg-red-500";
     if (progress < 66) return "bg-yellow-500";
     return "bg-green-500";
   };
 
+  const getReadingStatus = (): string => {
+    if (currentPage === 0) return "Pending";
+    if (currentPage === book?.paginas) return "Completed";
+    return "In Progress";
+  };
+
   return (
     <div className="min-h-screen bg-green-100 py-8 px-4 sm:px-8">
+      {error && <p className="text-red-500 mb-4">{error}</p>}
+      {isLoading && (
+        <div className="flex justify-center items-center mb-4">
+          <div className="animate-spin rounded-full h-8 w-8 border-t-4 border-b-4 border-green1"></div>
+        </div>
+      )}
       {book && (
         <div className="max-w-screen-lg mx-auto space-y-8">
           {/* Book Details Card */}
@@ -77,70 +150,58 @@ export const BookProgressPage: React.FC = () => {
               alt={`${book.titulo} cover`}
               className="w-full sm:w-48 h-auto object-cover rounded-lg"
             />
-            <div className="sm:ml-6 flex flex-col justify-center mt-4 sm:mt-0">
-              <h2 className="text-2xl font-bold mb-2">{book.titulo}</h2>
+            <div className="sm:ml-6 flex flex-col justify-center sm:mt-0">
+              <h2 className="text-2xl font-bold mb-2 mt-2">{book.titulo}</h2>
               <p className="text-lg text-gray-700 mb-1">
                 <strong>Author:</strong> {book.autor}
               </p>
               <p className="text-lg text-gray-700 mb-1">
                 <strong>Genre:</strong> {book.genero}
               </p>
-              <p className="text-lg text-gray-700 mb-3">
+              <p className="text-lg text-gray-700 mb-1">
                 <strong>Pages:</strong> {book.paginas}
               </p>
-
-              {/* Reading Status */}
-              <div className="flex items-center space-x-4">
-                <p className="text-lg">
-                  <strong>Status:</strong>
-                </p>
-                <select
-                  value={readingStatus}
-                  onChange={(e) => setReadingStatus(e.target.value)}
-                  className="p-2 border border-green1 rounded"
-                >
-                  <option value="Pending">Pending</option>
-                  <option value="Reading">Reading</option>
-                  <option value="Completed">Completed</option>
-                </select>
-              </div>
+              <p className="text-lg text-gray-700 mb-1">
+                <strong>Status:</strong> {getReadingStatus()}
+              </p>
+              <p className="text-lg text-gray-700">
+                <strong>Synopsis:</strong> {book.sinopsis}
+              </p>
             </div>
-          </div>
-
-          {/* Synopsis Card */}
-          <div className="bg-white shadow-md rounded-lg p-6">
-            <h3 className="text-xl font-bold mb-4">Synopsis</h3>
-            <p className="text-gray-700">{book.sinopsis}</p>
           </div>
 
           {/* Progress Card */}
           <div className="bg-white shadow-md rounded-lg p-6">
-            <h3 className="text-xl font-bold mb-4">Reading Progress</h3>
-
-            {/* Progress Bar */}
-            <div className="w-full bg-gray-300 h-6 rounded-full overflow-hidden mb-4">
-              <div
-                className={`h-full ${getProgressColor(
-                  calculateProgress()
-                )} transition-all duration-300`}
-                style={{ width: `${calculateProgress()}%` }}
-              ></div>
+            <div className="flex items-center mb-4">
+              <h3 className="text-2xl font-bold flex-shrink-0 mr-4">
+                Reading Progress
+              </h3>
+              {/* Progress Bar */}
+              <div className="flex-grow bg-gray-300 h-6 rounded-full overflow-hidden">
+                <div
+                  className={`h-full ${getProgressColor(
+                    calculateProgress()
+                  )} transition-all duration-300`}
+                  style={{ width: `${calculateProgress()}%` }}
+                ></div>
+              </div>
             </div>
+
             <p className="text-gray-700 mb-4">
               {currentPage} / {book.paginas} pages read ({calculateProgress().toFixed(2)}%)
             </p>
 
             {/* Page Input */}
             <label htmlFor="currentPage" className="block text-gray-700 mb-2">
-              Mark your current page:
+              Enter your current page and press Enter:
             </label>
             <input
               type="number"
               id="currentPage"
-              value={currentPage}
-              onChange={(e) => updateProgress(Number(e.target.value))}
-              min={0}
-              max={book.paginas}
+              value={currentPageInput}
+              onChange={(e) => setCurrentPageInput(e.target.value)}
+              onKeyDown={handlePageInputKeyPress}
+              disabled={isLoading}
               className="p-2 border border-green1 rounded w-full"
             />
           </div>

@@ -6,6 +6,7 @@ import { AppDispatch } from "../redux/store";
 
 const BACKEND_LOGIN_URL = `${process.env.REACT_APP_BACKEND_URL}/auth/signin`;
 const LOCAL_STORAGE_NAME = process.env.REACT_APP_LOCAL_STORAGE_NAME || "token";
+const LOCAL_STORAGE_USER_ID = "usuarioId";
 
 export const SignIn: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -48,6 +49,7 @@ export const SignIn: React.FC = () => {
       const data = await response.json();
       // Guardar el token en el localStorage
       localStorage.setItem(LOCAL_STORAGE_NAME, data.token);
+      localStorage.setItem(LOCAL_STORAGE_USER_ID, data.user._id); // Almacena el ID del usuario
       //Actualizar el estado global de la sesión
       dispatch(setSession({ token: data.token, userObject: data.user }));
 
