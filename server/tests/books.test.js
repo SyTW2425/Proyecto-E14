@@ -131,7 +131,7 @@ describe('Books Endpoints', () => {
       const response = await request(app).get('/libros/1').set('Authorization', `Bearer ${token}`);
 
       expect(response.status).toBe(400);
-      expect(response.body).toHaveProperty('error', 'Cast to ObjectId failed for value \"1\" (type string) at path \"_id\" for model \"Book\"');
+      expect(response.body).toHaveProperty('error', 'Cast to ObjectId failed for value "1" (type string) at path "_id" for model "Book"');
     });
 
     // Update a book
@@ -172,7 +172,7 @@ describe('Books Endpoints', () => {
         .send({ titulo: 'Non-existent Book' });
 
       expect(response.status).toBe(400);
-      expect(response.body).toHaveProperty('error', 'Cast to ObjectId failed for value \"1\" (type string) at path \"_id\" for model \"Book\"');
+      expect(response.body).toHaveProperty('error', 'Cast to ObjectId failed for value "1" (type string) at path "_id" for model "Book"');
     });
 
     // Delete a book
@@ -204,6 +204,6 @@ describe('Books Endpoints', () => {
       const response = await request(app).delete('/libros/1').set('Authorization', `Bearer ${token}`);
 
       expect(response.status).toBe(400);
-      expect(response.body).toHaveProperty('error', 'Cast to ObjectId failed for value \"1\" (type string) at path \"_id\" for model \"Book\"');
+      expect(response.body).toHaveProperty('error', 'Cast to ObjectId failed for value "1" (type string) at path "_id" for model "Book"');
     });
 });
