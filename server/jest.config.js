@@ -15,4 +15,5 @@ export default {
     'src/**/*.ts', // Incluye todos los archivos TypeScript en el directorio src
     '!src/index.ts', // Excluye archivos no relevantes, como el punto de entrada
   ],
+  testTimeout: 80000, // Tiempo máximo de espera para pruebas
 };

@@ -51,6 +51,8 @@ describe('Books Endpoints', () => {
 
       const response = await request(app).post('/libros').set('Authorization', `Bearer ${token}`).send(mockBook);
 
+      console.log('Response body:', response.body); 
+
       expect(response.status).toBe(201);
       expect(response.body).toHaveProperty(
         'message',
