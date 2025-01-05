@@ -33,6 +33,10 @@ jobs:
       # Paso 4: Generar cobertura con Jest
       - name: Generating coverage information
         working-directory: ./server
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }} # Base de datos de producción
+          TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI }} # Base de datos de pruebas
+          JWT_SECRET: ${{ secrets.JWT_SECRET }} # Clave JWT
         run: npm run coverage
 
       # Paso 5: Subir cobertura a Coveralls
