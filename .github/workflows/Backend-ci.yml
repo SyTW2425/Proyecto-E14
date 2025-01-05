@@ -1,4 +1,4 @@
-name: Backend CI
+name: Backend CI with Coverage
 
 on:
   push:
@@ -7,25 +7,31 @@ on:
     branches: ["desarrollo", "main"]
 
 jobs:
-  build:
+  backend-tests-and-coverage:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        node-version: [22.x] # Cambia las versiones si necesitas probar con otras
+
     steps:
-      # Paso 1: Checkout del código del repositorio
+      # Paso 1: Checkout del código
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Paso 2: Pruebas con Node.js 22.x
-      - name: Set up Node.js (22.x)
+      # Paso 2: Configuración de Node.js
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22.x
+          node-version: ${{ matrix.node-version }}
 
-      - name: Install dependencies (Node.js 22.x)
+      # Paso 3: Instalar dependencias
+      - name: Install dependencies
         working-directory: ./server
         run: npm install
 
-      - name: Run tests (Node.js 22.x)
+      # Paso 4: Ejecutar los tests
+      - name: Run tests
         working-directory: ./server
         env:
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
@@ -33,27 +39,17 @@ jobs:
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
         run: npm test
 
-      # Paso 3: Pruebas con Node.js 20.x
-      - name: Set up Node.js (20.x)
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20.x
-
-      - name: Install dependencies (Node.js 20.x)
-        working-directory: ./server
-        run: npm install
-
-      - name: Run tests (Node.js 20.x)
+      # Paso 5: Generar cobertura con Jest
+      - name: Generate coverage report
         working-directory: ./server
         env:
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
           TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
-        run: npm test
+        run: npm run coverage
 
-      # Paso 4: Guardar artefacto para cobertura
-      - name: Save artifact for coverage
-        uses: actions/upload-artifact@v3
+      # Paso 6: Subir reporte de cobertura a Coveralls
+      - name: Upload to Coveralls
+        uses: coverallsapp/github-action@v2.2.3
         with:
-          name: test-results
-          path: ./server
+          github-token: ${{ secrets.GITHUB_TOKEN }}
