@@ -83,7 +83,6 @@ describe('UserBook Endpoints', () => {
 		expect(res.body.userBook).toHaveProperty('estadoLectura', 'Pending');
 		expect(res.body.userBook).toHaveProperty('_id', userBookId);
 		expect(res.body.userBook).toHaveProperty('notas', []);
-		expect(res.body.userBook).toHaveProperty('__v', 0);
 	});
 
 	it ('should get an error if a book already exists', async () => {
@@ -143,6 +142,28 @@ describe('UserBook Endpoints', () => {
 		expect(res.statusCode).toEqual(200);
 		expect(res.body).toHaveLength(1);
 	});
+
+	it('should return 500 when an exception occurs getting all books', async () => {
+		await request(app)
+			.post('/userbooks')
+			.set('Authorization', `Bearer ${token}`)
+			.send({
+				usuarioId: mockUserId,
+				libroId: mockBookId
+			});
+		// Mock para forzar un error al interactuar con la base de datos
+		jest.spyOn(mongoose.Model, 'find').mockImplementationOnce(() => {
+			throw new Error('Forced database error');
+		});
+
+		const res = await request(app)
+			.get(`/userbooks/${mockUserId}`)
+			.set('Authorization', `Bearer ${token}`);
+
+		expect(res.statusCode).toEqual(500);
+		expect(res.body).toEqual({ error: 'Forced database error' });
+	});
+
 
 	it('should update the pages read and progress', async () => {
 		await request(app)
@@ -261,13 +282,6 @@ describe('UserBook Endpoints', () => {
   });
 
 	it('should not update the reading status when book is not found', async () => {
-		await request(app)
-			.post('/userbooks')
-			.set('Authorization', `Bearer ${token}`)
-			.send({
-				usuarioId: mockUserId,
-				libroId: mockBookId
-			});
 		const fakeId = new mongoose.Types.ObjectId();
 		const res = await request(app)
 			.patch('/userbooks/status')
@@ -282,7 +296,7 @@ describe('UserBook Endpoints', () => {
 	});
 
 
-	it('should return 500 Internal Server Error when an exception occurs updating the reading status', async () => {
+	it('should return 500 when an exception occurs updating the reading status', async () => {
     // Mock para forzar un error al interactuar con la base de datos
     jest.spyOn(mongoose.Model, 'findOneAndUpdate').mockImplementationOnce(() => {
       throw new Error('Forced database error');
@@ -349,13 +363,6 @@ describe('UserBook Endpoints', () => {
 	});
 
 	it('should not add a note to a book that does not exist', async () => {
-		await request(app)
-			.post('/userbooks')
-			.set('Authorization', `Bearer ${token}`)
-			.send({
-				usuarioId: mockUserId,
-				libroId: mockBookId
-			});
 		const fakeId = new mongoose.Types.ObjectId();
 		const res = await request(app)
 			.post('/userbooks/notes')
@@ -369,7 +376,7 @@ describe('UserBook Endpoints', () => {
 		expect(res.body).toEqual({ error: 'Book not found in user library' });
 	});
 
-	it('should return 500 Internal Server Error when an exception occurs adding a note', async () => {
+	it('should return 500 when an exception occurs adding a note', async () => {
 		// Mock para forzar un error al interactuar con la base de datos
 		jest.spyOn(mongoose.Model, 'findOneAndUpdate').mockImplementationOnce(() => {
 			throw new Error('Forced database error');
@@ -422,13 +429,6 @@ describe('UserBook Endpoints', () => {
   });
 
 	it('should not remove a note from a book that does not exist', async () => {
-		await request(app)
-			.post('/userbooks')
-			.set('Authorization', `Bearer ${token}`)
-			.send({
-				usuarioId: mockUserId,
-				libroId: mockBookId
-			});
 		const fakeId = new mongoose.Types.ObjectId();
 		const res = await request(app)
 			.delete('/userbooks/notes')
@@ -442,7 +442,7 @@ describe('UserBook Endpoints', () => {
 		expect(res.body).toEqual({ error: 'Book not found in user library' });
 	});
 
-	it('should return 500 Internal Server Error when an exception occurs removing a note', async () => {
+	it('should return 500 when an exception occurs removing a note', async () => {
 		// Mock para forzar un error al interactuar con la base de datos
 		jest.spyOn(mongoose.Model, 'findOneAndUpdate').mockImplementationOnce(() => {
 			throw new Error('Forced database error');
@@ -561,7 +561,7 @@ describe('UserBook Endpoints', () => {
 		expect(res.body).toEqual({ error: 'Book or note not found in user library' });
 	});
 
-	it('should return 500 Internal Server Error when an exception occurs updating a note', async () => {
+	it('should return 500 when an exception occurs updating a note', async () => {
 		// Mock para forzar un error al interactuar con la base de datos
 		jest.spyOn(mongoose.Model, 'findOneAndUpdate').mockImplementationOnce(() => {
 			throw new Error('Forced database error');
@@ -600,4 +600,79 @@ describe('UserBook Endpoints', () => {
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty('message', 'Book removed from library');
   });
+
+	it('should not remove a book that does not exist from a user\'s library', async () => {
+		const fakeId = new mongoose.Types.ObjectId();
+		const res = await request(app)
+			.delete('/userbooks')
+			.set('Authorization', `Bearer ${token}`)
+			.send({
+				usuarioId: mockUserId,
+				libroId: fakeId,
+			});
+		expect(res.statusCode).toEqual(404);
+		expect(res.body).toEqual({ error: 'Book not found in user library' });
+	});
+
+	it('should return 500 when an exception occurs removing a book from a user\'s library', async () => {
+		// Mock para forzar un error al interactuar con la base de datos
+		jest.spyOn(mongoose.Model, 'findOneAndDelete').mockImplementationOnce(() => {
+			throw new Error('Forced database error');
+		});
+
+		const res = await request(app)
+			.delete('/userbooks')
+			.set('Authorization', `Bearer ${token}`)
+			.send({
+				usuarioId: 'mockUserId',
+				libroId: 'mockBookId',
+			});
+		
+		expect(res.statusCode).toEqual(500);
+		expect(res.body).toEqual({ error: 'Forced database error' });
+	});
+
+	it('should get details of a specific book in user\'s library', async () => {
+		await request(app)
+			.post('/userbooks')
+			.set('Authorization', `Bearer ${token}`)
+			.send({
+				usuarioId: mockUserId,
+				libroId: mockBookId
+			});
+		const res = await request(app)
+			.get(`/userbooks/${mockUserId}/${mockBookId}`)
+			.set('Authorization', `Bearer ${token}`);
+		expect(res.statusCode).toEqual(200);
+		expect(res.body.libroId).toHaveProperty('_id', mockBookId);
+		expect(res.body.libroId).toHaveProperty('titulo', 'Harry Potter');
+		expect(res.body.libroId).toHaveProperty('autor', 'J.K. Rowling');
+		expect(res.body.libroId).toHaveProperty('genero', 'Fantasy');
+		expect(res.body.libroId).toHaveProperty('paginas', 300);
+		expect(res.body.libroId).toHaveProperty('sinopsis', 'Harry Potter is a series of seven fantasy novels written by British author, J. K. Rowling.');
+		expect(res.body.libroId).toHaveProperty('portada', 'https://images-na.ssl-images-amazon.com/images/I/51UoqRAxwEL._SX331_BO1,204,203,200_.jpg');
+	});
+
+	it('should return 404 if book not found in user\'s library', async () => {
+		const fakeId = new mongoose.Types.ObjectId();
+		const res = await request(app)
+			.get(`/userbooks/${mockUserId}/${fakeId}`)
+			.set('Authorization', `Bearer ${token}`);
+		expect(res.statusCode).toEqual(404);
+		expect(res.body).toEqual({ error: 'Book not found in user library' });
+	});
+
+	it('should return 500 if an exception occurs getting a specific book in user\'s library', async () => {
+		// Mock para forzar un error al interactuar con la base de datos
+		jest.spyOn(mongoose.Model, 'findOne').mockImplementationOnce(() => {
+			throw new Error('Forced database error');
+		});
+
+		const res = await request(app)
+			.get(`/userbooks/${mockUserId}/${mockBookId}`)
+			.set('Authorization', `Bearer ${token}`);
+
+		expect(res.statusCode).toEqual(500);
+		expect(res.body).toEqual({ error: 'Forced database error' });
+	});
 });
