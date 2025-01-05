@@ -1,13 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 
 export default function LandingPage() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  
   return (
     <div className="font-roboto text-gray-900">
       {/* Header */}
       <header className="header bg-transparent absolute top-0 left-0 z-40 w-full flex items-center transition sticky backdrop-filter backdrop-blur-lg bg-opacity-60">
         <div className="container mx-auto flex items-center justify-between px-3 py-4">
           <h1 className="text-4xl font-extrabold text-green2">Bookies.</h1>
-          <nav className="flex items-center space-x-6">
+          {/* Desktop Menu */}
+          <nav className="hidden md:flex items-center space-x-6">
             <a
               href="#hero"
               className="text-gray-600 hover:text-green1 font-medium transition"
@@ -39,7 +42,61 @@ export default function LandingPage() {
               Sign Up
             </button>
           </nav>
+          {/* Mobile Menu Button */}
+          <button
+            className="md:hidden text-2xl text-green2 focus:outline-none"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            {isMenuOpen ? "✕" : "☰"}
+          </button>
         </div>
+
+        {/* Mobile Menu */}
+        {isMenuOpen && (
+          <div className="md:hidden bg-white shadow-lg absolute top-full left-0 w-full z-50 py-4">
+            <nav className="flex flex-col items-center space-y-4">
+              <a
+                href="#hero"
+                className="text-gray-600 hover:text-green1 font-medium transition"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Home
+              </a>
+              <a
+                href="#features"
+                className="text-gray-600 hover:text-green1 font-medium transition"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Features
+              </a>
+              <a
+                href="#testimonial"
+                className="text-gray-600 hover:text-green1 font-medium transition"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Testimonials
+              </a>
+              <button
+                className="text-orange-300 hover:text-green1 font-medium transition"
+                onClick={() => {
+                  window.location.href = "/signin";
+                  setIsMenuOpen(false);
+                }}
+              >
+                Sign In
+              </button>
+              <button
+                onClick={() => {
+                  window.location.href = "/signup";
+                  setIsMenuOpen(false);
+                }}
+                className="bg-green2 text-white font-medium px-4 py-2 rounded-lg shadow hover:bg-orange-300 transition"
+              >
+                Sign Up
+              </button>
+            </nav>
+          </div>
+        )}
       </header>
 
       {/* Hero Section */}
@@ -124,19 +181,6 @@ export default function LandingPage() {
                         fill="#49ab81"
                       ></path>
                     </svg>
-                    {/* <svg
-                      width="50"
-                      height="50"
-                      viewBox="0 0 50 50"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="m27.2727 8.8069458c-.0004444-.1921501-.0739536-.374876-.1672974-.5403442-1.0859375-1.6054688-1.0859375-3.1005859 0-4.7060547.2070312-.3066406.2280273-.703125.0546875-1.0292969-.1733398-.3271484-.5131835-.53125-.8833007-.53125h-18.7124023c-2.1806641 0-3.9545899 1.7558594-3.9545899 3.9140625v20.171875c0 2.1582031 1.7739258 3.9140625 3.9545899 3.9140625h18.7124023c.5522461 0 1-.4472656 1-1-.0041008-.0050087.0078506-20.1867075-.0040894-20.1930542zm-19.7083129-4.8069458h17.0766602c-.4599609 1.2685547-.4599609 2.5585938 0 3.8271484h-7.1538086c0-1.1025391-.8969727-2-2-2h-4.9228516c-1.1030273 0-2 .8974609-2 2h-1c-1.0776367 0-1.9545898-.8583984-1.9545898-1.9130859-.0000001-1.0556641.876953-1.9140625 1.9545898-1.9140625zm7.9287109 10.8759766c-.0052509-.0028267-1.291873-.9338665-1.2973633-.9375-.699707-.5039062-1.640625-.5048828-2.3413086.0009766l-1.2900391.9326172v-7.044922h4.9228516zm-7.9287109 13.1240234c-1.0776367 0-1.9545898-.8583984-1.9545898-1.9140625v-16.7909546c.5789795.3291626 1.2402954.5321655 1.9545898.5321655h1v5.0449219c0 .7548828.4174805 1.4365234 1.0893555 1.7802734.6708984.3417969 1.4692383.2832031 2.0820312-.1591797l1.2895508-.9326172 1.2905273.9326172h.0004883c.6134195.4429512 1.4121246.5021744 2.081543.1591797.671875-.34375 1.0893555-1.0253906 1.0893555-1.7802734v-5.0449219h7.7895508v18.1728516z"
-                        fill="#49ab81"
-                        transform="scale(1.65)"
-                      ></path>
-                    </svg> */}
                   </div>
                   <h3 className="font-bold text-black text-xl sm:text-2xl lg:text-xl xl:text-2xl mb-5">
                     Accessibility
@@ -355,7 +399,7 @@ export default function LandingPage() {
                 style={{ visibility: "visible", animationDelay: "0.1s" }}
               >
                 <h2 className="text-black font-bold text-3xl sm:text-4xl md:text-[45px] mb-5 mt-3">
-                  What our users says
+                  What our users say
                 </h2>
                 <p className="text-gray-800 text-base md:text-lg leading-relaxed md:leading-relaxed max-w-[570px] mx-auto">
                   Hear from readers who use Bookies to organize their libraries,

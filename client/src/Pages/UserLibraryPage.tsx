@@ -145,30 +145,55 @@ export const UserLibraryPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-green-100 flex">
-      {/* Sidebar */}
-      <nav className="fixed top-0 left-0 h-screen w-16 bg-green1 text-white flex flex-col justify-center items-center rounded-r-xl">
-        <button
-          className="mb-6 hover:bg-green2 p-2 rounded -mt-4"
-          onClick={() => navigate("/books")}
-        >
-          <FaSearchPlus size={24} />
-        </button>
-        <button
-          className="mb-6 hover:bg-green2 p-2 rounded"
-          onClick={() => navigate("/library")}
-        >
-          <FaBook size={24} />
-        </button>
-        <button
-          className="hover:bg-green2 p-2 rounded"
-          onClick={() => navigate("/profile")}
-        >
-          <FaUser size={24} />
-        </button>
-      </nav>
+      {/* Navbar */}
+        <nav>
+        {/* Navbar para pantallas grandes */}
+        <div className="hidden sm:flex fixed top-0 left-0 h-screen w-16 bg-green1 text-white flex-col justify-center items-center rounded-r-xl z-50">
+            <button
+            className="mb-6 hover:bg-green2 p-2 rounded -mt-4"
+            onClick={() => navigate("/books")}
+            >
+            <FaSearchPlus size={24} />
+            </button>
+            <button
+            className="mb-6 hover:bg-green2 p-2 rounded"
+            onClick={() => navigate("/library")}
+            >
+            <FaBook size={24} />
+            </button>
+            <button
+            className="hover:bg-green2 p-2 rounded"
+            onClick={() => navigate("/profile")}
+            >
+            <FaUser size={24} />
+            </button>
+        </div>
+
+        {/* Navbar para móviles */}
+        <div className="sm:hidden fixed bottom-0 left-0 w-full bg-green1 text-white flex justify-around items-center py-2 z-50">
+            <button
+            className="hover:bg-green2 p-2 rounded"
+            onClick={() => navigate("/books")}
+            >
+            <FaSearchPlus size={24} />
+            </button>
+            <button
+            className="hover:bg-green2 p-2 rounded"
+            onClick={() => navigate("/library")}
+            >
+            <FaBook size={24} />
+            </button>
+            <button
+            className="hover:bg-green2 p-2 rounded"
+            onClick={() => navigate("/profile")}
+            >
+            <FaUser size={24} />
+            </button>
+        </div>
+        </nav>
 
       {/* Main Content */}
-      <div className="flex-grow ml-16">
+      <div className="flex-grow sm:ml-16 md:ml-16">
         {/* Sticky Header with Shadow */}
         <header
           className={`sticky top-0 z-20 bg-green-100 transition-shadow duration-300 ${
@@ -192,7 +217,7 @@ export const UserLibraryPage: React.FC = () => {
           </div>
         </header>
 
-        <main className="py-6 px-8">
+        <main className="py-6 px-8 pb-16">
           <div className="max-w-screen-2xl mx-auto space-y-4">
             {filteredBooks.map((book) => (
               <div

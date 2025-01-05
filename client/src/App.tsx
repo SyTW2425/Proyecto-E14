@@ -7,6 +7,7 @@ import LandingPage from "./Pages/LandingPage";
 import BooksPage from "./Pages/BooksPage";
 import UserLibraryPage from "./Pages/UserLibraryPage";
 import { BookProgressPage } from "./Pages/BookProgressPage";
+import UserProfilePage from "./Pages/UserProfilePage";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/books" element={<BooksPage />} />
         <Route path="/library" element={<UserLibraryPage />} />
         <Route path="/library/:id" element={<BookProgressPage />} />
+        <Route path="/profile" element={<UserProfilePage />} />
       </Routes>
     </Router>
   );

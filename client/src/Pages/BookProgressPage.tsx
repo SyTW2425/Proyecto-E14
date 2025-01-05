@@ -249,30 +249,55 @@ export const BookProgressPage: React.FC = () => {
 
   return (
     <div className="flex">
-      {/* Sidebar */}
-      <nav className="fixed top-0 left-0 h-screen w-16 bg-green1 text-white flex flex-col justify-center items-center rounded-r-xl z-50">
-        <button
-          className="mb-6 hover:bg-green2 p-2 rounded -mt-4"
-          onClick={() => navigate("/books")}
-        >
-          <FaSearchPlus size={24} />
-        </button>
-        <button
-          className="mb-6 hover:bg-green2 p-2 rounded"
-          onClick={() => navigate("/library")}
-        >
-          <FaBook size={24} />
-        </button>
-        <button
-          className="hover:bg-green2 p-2 rounded"
-          onClick={() => navigate("/profile")}
-        >
-          <FaUser size={24} />
-        </button>
-      </nav>
+      {/* Navbar */}
+        <nav>
+        {/* Navbar para pantallas grandes */}
+        <div className="hidden sm:flex fixed top-0 left-0 h-screen w-16 bg-green1 text-white flex-col justify-center items-center rounded-r-xl z-50">
+            <button
+            className="mb-6 hover:bg-green2 p-2 rounded -mt-4"
+            onClick={() => navigate("/books")}
+            >
+            <FaSearchPlus size={24} />
+            </button>
+            <button
+            className="mb-6 hover:bg-green2 p-2 rounded"
+            onClick={() => navigate("/library")}
+            >
+            <FaBook size={24} />
+            </button>
+            <button
+            className="hover:bg-green2 p-2 rounded"
+            onClick={() => navigate("/profile")}
+            >
+            <FaUser size={24} />
+            </button>
+        </div>
+
+        {/* Navbar para móviles */}
+        <div className="sm:hidden fixed bottom-0 left-0 w-full bg-green1 text-white flex justify-around items-center py-2 z-50">
+            <button
+            className="hover:bg-green2 p-2 rounded"
+            onClick={() => navigate("/books")}
+            >
+            <FaSearchPlus size={24} />
+            </button>
+            <button
+            className="hover:bg-green2 p-2 rounded"
+            onClick={() => navigate("/library")}
+            >
+            <FaBook size={24} />
+            </button>
+            <button
+            className="hover:bg-green2 p-2 rounded"
+            onClick={() => navigate("/profile")}
+            >
+            <FaUser size={24} />
+            </button>
+        </div>
+        </nav>
 
       {/* Main content */}
-      <div className="ml-16 w-full min-h-screen bg-green-100 py-8 px-4 sm:px-8">
+      <div className="sm:ml-16 w-full min-h-screen bg-green-100 py-8 px-4 sm:px-8 pb-16">
         {isLoading && (
           <div className="flex justify-center items-center mb-4">
             <div className="animate-spin rounded-full h-8 w-8 border-t-4 border-b-4 border-green1"></div>
@@ -330,7 +355,7 @@ export const BookProgressPage: React.FC = () => {
                 </p>
                 <div className="sm:mt-0 flex items-center">
                   <p className="text-gray-700 text-base sm:text-lg mr-4">
-                    <strong>Pages read:</strong>
+                    <strong>How many pages have you read?</strong>
                   </p>
                   <input
                     type="number"

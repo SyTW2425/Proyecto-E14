@@ -133,9 +133,6 @@ export const SignUp: React.FC = () => {
   //   throw new Error("Function not implemented.");
   // }
 
-  function toggleDropdown(): void {
-    setDropdownVisible(!dropdownVisible);
-  }
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -158,21 +155,21 @@ export const SignUp: React.FC = () => {
       <div className="relative hidden h-screen select-none flex-col justify-center bg-green2 text-center md:flex md:w-1/2">
         <div className="mx-auto py-16 px-8 text-white xl:w-[40rem]"></div>
       </div>
-      <div className="flex w-full flex-col md:w-1/2 -mt-1">
-        <div className="flex justify-center pt-12 md:justify-start md:pl-12">
-          <button className="text-2xl font-bold text-green1 hover:text-green2">
+      <div className="flex w-full flex-col md:w-1/2 -mt-1 mt-28 lg:mt-0">
+        <div className="flex justify-center pt-8 md:justify-start md:pl-12">
+          <button className="text-2xl font-bold text-green1 hover:text-green2 sm:-ml-8">
             {" "}
             Bookies .{" "}
           </button>
         </div>
-        <div className="my-auto mx-auto flex flex-col justify-center px-6 pt-8 md:justify-start lg:w-[28rem]  ">
+        <div className="my-20 mx-auto flex flex-col justify-center px-6 md:justify-start lg:w-[28rem]  ">
           <p className="text-center text-3xl font-bold md:text-left md:leading-tight">
             Create your account
           </p>
-          <p className="mt-6 text-center font-medium md:text-left">
+          <p className="mt-6 text-center font-medium md:text-left text-gray-500">
             Already have an account? {""}
             <button
-              className="whitespace-nowrap font-bold text-green1 hover:text-green2"
+              className="whitespace-nowrap font-bold text-green1 hover:text-green2 hover:underline"
               onClick={() => navigate("/signin")}
             >
               Login here
@@ -183,25 +180,9 @@ export const SignUp: React.FC = () => {
             onSubmit={handleSubmit}
             className="flex flex-col items-stretch pt-3 md:pt-8"
           >
-            {/* Name */}
-            {/* <div className="flex flex-col pt-4">
-              <div className="relative flex overflow-hidden rounded-md border-2 transition focus-within:border-blue-600">
-                <input
-                  type="text"
-                  id="login-name"
-                  className="w-full flex-shrink appearance-none border-gray-300 bg-white py-2 px-4 text-base text-gray-700 placeholder-gray-400 focus:outline-none"
-                  placeholder="Name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
-                {fieldErrors.name && (
-                  <p className="text-red-600 text-sm">{fieldErrors.name}</p>
-                )}
-              </div>
-            </div> */}
             {/* Username */}
             <div className="flex flex-col pt-4">
-              <div className="relative flex overflow-hidden rounded-md border-2 transition focus-within:border-blue-600">
+              <div className="relative flex overflow-hidden rounded-md border transition focus-within:border-blue-600">
                 <input
                   type="text"
                   id="user-name"
@@ -215,9 +196,9 @@ export const SignUp: React.FC = () => {
                 )}
               </div>
             </div>
-            {/* Email */}
-            <div className="flex flex-col pt-4">
-              <div className="relative flex overflow-hidden rounded-md border-2 transition focus-within:border-blue-600">
+            {/* email */}
+            <div className="flex flex-col pt-4 -mt-2">
+              <div className="relative flex overflow-hidden rounded-md border transition focus-within:border-blue-600">
                 <input
                   type="email"
                   id="login-email"
@@ -232,8 +213,8 @@ export const SignUp: React.FC = () => {
               </div>
             </div>
             {/* Password */}
-            <div className="mb-4 flex flex-col pt-4">
-              <div className="relative flex overflow-hidden rounded-md border-2 transition focus-within:border-blue-600">
+            <div className="mb-3 flex flex-col pt-4 -mt-2">
+              <div className="relative flex overflow-hidden rounded-md border transition focus-within:border-blue-600">
                 <input
                   type="password"
                   id="login-password"
@@ -248,8 +229,8 @@ export const SignUp: React.FC = () => {
               </div>
             </div>
             {/* Confirm Password */}
-            <div className="mb-4 flex flex-col pt-4 -mt-6">
-              <div className="relative flex overflow-hidden rounded-md border-2 transition focus-within:border-blue-600">
+            <div className="mb-3 flex flex-col pt-4 -mt-6">
+              <div className="relative flex overflow-hidden rounded-md border transition focus-within:border-blue-600">
                 <input
                   type="password"
                   id="confirm-password"
@@ -267,75 +248,50 @@ export const SignUp: React.FC = () => {
             </div>
 
             {/* Dropdown Preferences */}
-            <div className="relative flex flex-col pt-4 -mt-6">
-              <button
-                type="button"
-                className="w-full border rounded-lg bg-white px-4 py-2 text-left text-gray-400 flex items-center justify-between"
-                onClick={toggleDropdown}
+          {/* Dropdown Preferences */}
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setDropdownVisible(!dropdownVisible)}
+              className="w-full py-2 px-4 border rounded-md text-left bg-white text-gray-400"
+            >
+              {selectedGenres.length > 0
+                ? `Selected: ${selectedGenres.join(", ")}`
+                : "Select Preferences"}
+            </button>
+            {dropdownVisible && (
+              <div
+                ref={dropdownRef}
+                className="absolute w-full bg-white border rounded-md shadow-lg max-h-48 overflow-y-auto mt-2 z-10"
               >
-                {selectedGenres.length > 0
-                  ? `Selected: ${selectedGenres.join(", ")}`
-                  : "Select Preferences"}
-                <svg
-                  className="w-4 h-4"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 10 6"
-                >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d={dropdownVisible ? "M9 5L5 1 1 5" : "M1 1L5 5 9 1"}
-                  />
-                </svg>
-              </button>
-              {dropdownVisible && (
-                <div
-                  ref={dropdownRef}
-                  className="absolute mt-2 w-full rounded-lg border bg-white shadow-lg max-h-48 overflow-y-auto z-10"
-                >
-                  <ul className="p-2 space-y-2 text-sm text-gray-700">
-                    {availableGenres.map((genre) => (
-                      <li key={genre}>
-                        <div
-                          className="flex items-center p-2 rounded hover:bg-gray-100 cursor-pointer"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            toggleGenre(genre);
-                          }}
-                        >
-                          <input
-                            id={genre}
-                            type="checkbox"
-                            checked={selectedGenres.includes(genre)}
-                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-                            readOnly
-                          />
-                          <label
-                            htmlFor={genre}
-                            className="ml-2 text-gray-900 cursor-pointer"
-                          >
-                            {genre}
-                          </label>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
+                {availableGenres.map((genre) => (
+                  <div
+                    key={genre}
+                    className="flex items-center px-4 py-2 hover:bg-green2 hover:text-white cursor-pointer"
+                    onClick={() => toggleGenre(genre)}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={selectedGenres.includes(genre)}
+                      readOnly
+                      className="mr-2"
+                    />
+                    <span>{genre}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
 
             {fieldErrors.selectedGenres && (
-              <p className="text-red-600 text-sm">
+              <p className="text-red-600 text-sm mt-3 text-center">
                 {fieldErrors.selectedGenres}
               </p>
             )}
 
             {/* General Error */}
             {generalError && (
-              <p className="text-red-600 text-sm">
+              <p className="text-red-600 text-sm mt-3 text-center">
                 {typeof generalError === "string" ? generalError : ""}
               </p>
             )}
@@ -354,3 +310,5 @@ export const SignUp: React.FC = () => {
 };
 
 export default SignUp;
+
+

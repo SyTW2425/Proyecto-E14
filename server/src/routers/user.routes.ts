@@ -4,6 +4,8 @@ import {
   getUserById,
   updateUser,
   deleteUser,
+  updatePreferences,
+  changePassword,
 } from '../controllers/user.controller.js';
 import { authMiddleware } from '../middlewares/auth.middleware.js';
 
@@ -17,5 +19,9 @@ userRouter.get('/:id', authMiddleware, getUserById);
 userRouter.put('/:id', authMiddleware, updateUser);
 // Delete user account
 userRouter.delete('/:id', authMiddleware, deleteUser);
+// Update reading preferences
+userRouter.put('/:id/preferences', authMiddleware, updatePreferences);
+// Update password
+userRouter.put('/:id/password', authMiddleware, changePassword);
 
 export default userRouter;
