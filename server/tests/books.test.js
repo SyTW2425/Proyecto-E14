@@ -32,16 +32,6 @@ describe('Books Endpoints', () => {
     };
   });
 
-  beforeEach(async () => {
-    const collections = mongoose.connection.collections;
-    for (const key in collections) {
-        if (collections[key]) {
-            await collections[key].deleteMany({});
-        }
-    }
-});
-
-
   afterEach(async () => {
     const collections = mongoose.connection.collections;
 

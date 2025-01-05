@@ -1,7 +1,7 @@
 import request from 'supertest';
 import mongoose from 'mongoose';
 import app from '../src/index';
-import { describe, it, expect, beforeAll, beforeEach, afterAll } from '@jest/globals';
+import { describe, it, expect, beforeAll, afterAll } from '@jest/globals';
 
 describe('Auth Endpoints - Signup', () => {
   beforeAll(async () => {
@@ -10,16 +10,6 @@ describe('Auth Endpoints - Signup', () => {
       dbName: 'tests', // Base de datos de pruebas
     });
   });
-
-  beforeEach(async () => {
-    const collections = mongoose.connection.collections;
-    for (const key in collections) {
-        if (collections[key]) {
-            await collections[key].deleteMany({});
-        }
-    }
-});
-
 
   afterAll(async () => {
     const collections = mongoose.connection.collections;
