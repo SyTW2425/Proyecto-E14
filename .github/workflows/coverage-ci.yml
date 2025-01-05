@@ -33,7 +33,7 @@ jobs:
       # Paso 4: Generar cobertura con Jest
       - name: Generating coverage information
         working-directory: ./server
-        run: npm run coverage
+        run: npm run test
 
       # Paso 5: Subir cobertura a Coveralls
       - name: Coveralls GitHub Action
