@@ -2,7 +2,7 @@ import request from 'supertest';
 import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
 import app from '../src/index';
-import { describe, it, expect, beforeAll, afterAll, afterEach } from '@jest/globals';
+import { describe, it, expect, beforeAll, afterAll, afterEach, beforeEach } from '@jest/globals';
 import jest from 'jest-mock';
 import Libro from '../src/models/book';
 
@@ -31,6 +31,16 @@ describe('Books Endpoints', () => {
       portada: "https://m.media-amazon.com/images/I/91bNnC0hTFL._AC_UF894,1000_QL80_.jpg"
     };
   });
+
+  beforeEach(async () => {
+    const collections = mongoose.connection.collections;
+    for (const key in collections) {
+        if (collections[key]) {
+            await collections[key].deleteMany({});
+        }
+    }
+});
+
 
   afterEach(async () => {
     const collections = mongoose.connection.collections;
