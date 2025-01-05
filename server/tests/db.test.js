@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import  connectDB from '../src/db'; // Adjust the path to where your connectDB function is located
-import { describe, it, expect, beforeAll, afterAll, afterEach } from '@jest/globals';
+import { describe, it, expect, beforeAll, afterAll } from '@jest/globals';
 import jest from 'jest-mock';
 
 describe('connectDB', () => {

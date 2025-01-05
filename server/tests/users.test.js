@@ -1,4 +1,5 @@
 import request from 'supertest';
+import { describe, it, expect, beforeAll, afterAll } from '@jest/globals';
 import app from '../src/index';
 import Usuario from '../src/models/user';
 import mongoose from 'mongoose';
@@ -26,7 +27,7 @@ describe('Users Endpoints', () => {
         }
         
         // Create test user and get token
-        const resultado = await Usuario.create(mockUser2);
+        await Usuario.create(mockUser2);
         const res = await request(app).post('/auth/signin').send({
             correo: mockUser2.correo,
             password: mockUser2.password,
