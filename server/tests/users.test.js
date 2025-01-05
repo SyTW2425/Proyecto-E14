@@ -79,15 +79,15 @@ describe('Users Endpoints', () => {
         mockUser2.correo = ['Romance', 'Fantasy'];
     });
 
-    // it('should return all users without passwords', async () => {
-    //     const res = await request(app)
-    //         .get('/usuarios')
-    //         .set('Authorization', `Bearer ${token}`); 
-    //     expect(res.status).toBe(200);
-    //     expect(Array.isArray(res.body)).toBe(true);
-    //     expect(res.body[0]).toHaveProperty('username', mockUser2.username);
-    //     expect(res.body[0]).not.toHaveProperty('password');
-    // });
+    it('should return all users without passwords', async () => {
+        const res = await request(app)
+            .get('/usuarios')
+            .set('Authorization', `Bearer ${token}`); 
+        expect(res.status).toBe(200);
+        expect(Array.isArray(res.body)).toBe(true);
+        expect(res.body[0]).toHaveProperty('username', mockUser2.username);
+        expect(res.body[0]).not.toHaveProperty('password');
+    });
     it('should return 500 if internal error in getAllUsers', async () => {
         jest.spyOn(Usuario, 'find').mockRejectedValueOnce(new Error('Database error'));
         const res = await request(app)
@@ -105,14 +105,14 @@ describe('Users Endpoints', () => {
         expect(res.body).toHaveProperty('error', 'Database error');
     });
 
-    // it('should return a single user by ID', async () => {
-    //     const res = await request(app)
-    //         .get(`/usuarios/${mockUser2Id}`)
-    //         .set('Authorization', `Bearer ${token}`);
-    //     expect(res.status).toBe(200);
-    //     expect(res.body).toHaveProperty('username', 'testuser2');
-    //     expect(res.body).not.toHaveProperty('password');
-    // });
+    it('should return a single user by ID', async () => {
+        const res = await request(app)
+            .get(`/usuarios/${mockUser2Id}`)
+            .set('Authorization', `Bearer ${token}`);
+        expect(res.status).toBe(200);
+        expect(res.body).toHaveProperty('username', 'testuser2');
+        expect(res.body).not.toHaveProperty('password');
+    });
 
     it('should return 404 if user is not found', async () => {
         const fakeId = new mongoose.Types.ObjectId();
@@ -124,17 +124,17 @@ describe('Users Endpoints', () => {
         expect(res.body).toHaveProperty('error', 'User not found');
     });
 
-    // it('should update a user profile', async () => {
-    //     const updatedData = { username: 'updateduser' };
+    it('should update a user profile', async () => {
+        const updatedData = { username: 'updateduser' };
 
-    //     const res = await request(app)
-    //         .put(`/usuarios/${mockUser2Id}`)
-    //         .set('Authorization', `Bearer ${token}`)
-    //         .send(updatedData);
-    //     expect(res.status).toBe(200);
-    //     expect(res.body).toHaveProperty('message', 'User updated successfully');
-    //     expect(res.body.updatedUser).toHaveProperty('username', 'updateduser');
-    // });
+        const res = await request(app)
+            .put(`/usuarios/${mockUser2Id}`)
+            .set('Authorization', `Bearer ${token}`)
+            .send(updatedData);
+        expect(res.status).toBe(200);
+        expect(res.body).toHaveProperty('message', 'User updated successfully');
+        expect(res.body.updatedUser).toHaveProperty('username', 'updateduser');
+    });
 
     it('should return 404 if user is not found', async () => {
         const fakeId = new mongoose.Types.ObjectId();
@@ -157,14 +157,14 @@ describe('Users Endpoints', () => {
         expect(res.body).toHaveProperty('error', 'Validation failed: username: The username must be at least 4 characters long');
     });
 
-    // it('should delete a user account', async () => {
-    //     const res = await request(app)
-    //         .delete(`/usuarios/${mockUser2Id}`)
-    //         .set('Authorization', `Bearer ${token}`);
+    it('should delete a user account', async () => {
+        const res = await request(app)
+            .delete(`/usuarios/${mockUser2Id}`)
+            .set('Authorization', `Bearer ${token}`);
 
-    //     expect(res.status).toBe(200);
-    //     expect(res.body).toHaveProperty('message', 'User deleted successfully');
-    // });
+        expect(res.status).toBe(200);
+        expect(res.body).toHaveProperty('message', 'User deleted successfully');
+    });
 
     it('should return 404 if user is not found', async () => {
         const fakeId = new mongoose.Types.ObjectId();
