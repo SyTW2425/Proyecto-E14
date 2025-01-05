@@ -2,7 +2,7 @@ import request from 'supertest';
 import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
 import app from '../src/index';
-import { describe, it, expect, beforeAll, afterAll, afterEach, beforeEach } from '@jest/globals';
+import { describe, it, expect, beforeAll, afterAll, afterEach } from '@jest/globals';
 import jest from 'jest-mock';
 import Libro from '../src/models/book';
 
@@ -113,6 +113,10 @@ describe('Books Endpoints', () => {
       const post_response = await request(app).post('/libros').set('Authorization', `Bearer ${token}`).send(mockBook);
 
       const mockBookID =  post_response.body.book._id;
+
+      if (!mockBookID) {
+        throw new Error('Book ID not found');
+      }
 
       const response = await request(app).get(`/libros/${mockBookID}`).set('Authorization', `Bearer ${token}`);
 

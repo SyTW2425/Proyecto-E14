@@ -1,5 +1,5 @@
 import request from 'supertest';
-import { describe, it, expect, beforeAll, afterAll, beforeEach } from '@jest/globals';
+import { describe, it, expect, beforeAll, afterAll } from '@jest/globals';
 import app from '../src/index';
 import Usuario from '../src/models/user';
 import mongoose from 'mongoose';
@@ -15,11 +15,6 @@ describe('Users Endpoints', () => {
         password: 'password123',
         preferenciasLectura: ['Romance', 'Fantasy'],
     };
-
-    beforeEach(async () => {
-        // Clear the database before each test
-        await Usuario.deleteMany({});
-    });
 
     beforeAll(async () => {
         // Ensure not calling mongoose.connect() multiple times
