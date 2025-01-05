@@ -15,7 +15,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [20.x, 23.x] # Matrix para pruebas con múltiples versiones de Node.js
+        node-version: [22.x] # Matrix para pruebas con múltiples versiones de Node.js
 
     steps:
       # Paso 1: Checkout del código del repositorio
