@@ -1,29 +1,27 @@
 name: Backend Coverage CI
 
 on:
-  push:
-    branches: ["desarrollo", "main"]
-  pull_request:
-    branches: ["desarrollo", "main"]
+  workflow_run:
+    workflows: ["Backend CI"]
+    types:
+      - completed
 
 jobs:
-  build-and-coverage:
+  coverage:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [22.x]
-
     steps:
-      # Paso 1: Checkout del código
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      # Paso 1: Descargar artefacto del flujo anterior
+      - name: Download test artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: test-results
 
-      # Paso 2: Configurar Node.js
+      # Paso 2: Set up Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 22.x
 
       # Paso 3: Instalar dependencias
       - name: Install dependencies
@@ -34,13 +32,13 @@ jobs:
       - name: Generating coverage information
         working-directory: ./server
         env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI }} # Base de datos de producción
-          TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI }} # Base de datos de pruebas
-          JWT_SECRET: ${{ secrets.JWT_SECRET }} # Clave JWT
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
         run: npm run coverage
 
       # Paso 5: Subir cobertura a Coveralls
       - name: Coveralls GitHub Action
         uses: coverallsapp/github-action@v2.2.3
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }} # Token generado automáticamente por GitHub
+          github-token: ${{ secrets.GITHUB_TOKEN }}

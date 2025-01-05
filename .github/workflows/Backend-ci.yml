@@ -19,7 +19,7 @@ jobs:
       - name: Set up Node.js (22.x)
         uses: actions/setup-node@v4
         with:
-          node-version: 22.x # Usa la versión 22.x de Node.js
+          node-version: 22.x
 
       - name: Install dependencies (Node.js 22.x)
         working-directory: ./server
@@ -37,7 +37,7 @@ jobs:
       - name: Set up Node.js (20.x)
         uses: actions/setup-node@v4
         with:
-          node-version: 20.x # Usa la versión 20.x de Node.js
+          node-version: 20.x
 
       - name: Install dependencies (Node.js 20.x)
         working-directory: ./server
@@ -50,3 +50,10 @@ jobs:
           TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
         run: npm test
+
+      # Paso 4: Guardar artefacto para cobertura
+      - name: Save artifact for coverage
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results
+          path: ./server
