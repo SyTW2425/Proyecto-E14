@@ -34,12 +34,11 @@ describe('Books Endpoints', () => {
 
   afterEach(async () => {
     const collections = mongoose.connection.collections;
+
     for (const key in collections) {
-      const collection = collections[key];
-      await collection.deleteMany({}); // Limpia todos los documentos de cada colección
+      await collections[key].deleteMany({}); // Limpia todos los documentos
     }
   });
-  
 
   afterAll(async () => {
     await mongoose.disconnect();
@@ -49,8 +48,6 @@ describe('Books Endpoints', () => {
     it('should add a new book', async () => {
 
       const response = await request(app).post('/libros').set('Authorization', `Bearer ${token}`).send(mockBook);
-
-      console.log('Response body:', response.body); 
 
       expect(response.status).toBe(201);
       expect(response.body).toHaveProperty(
@@ -115,10 +112,6 @@ describe('Books Endpoints', () => {
 
       const post_response = await request(app).post('/libros').set('Authorization', `Bearer ${token}`).send(mockBook);
 
-      expect(post_response.status).toBe(201);
-      expect(post_response.body).toHaveProperty('book');
-      expect(post_response.body.book).toHaveProperty('_id');
-
       const mockBookID =  post_response.body.book._id;
 
       const response = await request(app).get(`/libros/${mockBookID}`).set('Authorization', `Bearer ${token}`);
@@ -138,17 +131,13 @@ describe('Books Endpoints', () => {
       const response = await request(app).get('/libros/1').set('Authorization', `Bearer ${token}`);
 
       expect(response.status).toBe(400);
-      expect(response.body).toHaveProperty('error', 'Cast to ObjectId failed for value "1" (type string) at path "_id" for model "Book"');
+      expect(response.body).toHaveProperty('error', 'Cast to ObjectId failed for value \"1\" (type string) at path \"_id\" for model \"Book\"');
     });
 
     // Update a book
     it('should update a book', async () => {
       
       const post_response = await request(app).post('/libros').set('Authorization', `Bearer ${token}`).send(mockBook);
-
-      expect(post_response.status).toBe(201);
-      expect(post_response.body).toHaveProperty('book');
-      expect(post_response.body.book).toHaveProperty('_id');
 
       const mockBookID =  post_response.body.book._id;
 
@@ -183,7 +172,7 @@ describe('Books Endpoints', () => {
         .send({ titulo: 'Non-existent Book' });
 
       expect(response.status).toBe(400);
-      expect(response.body).toHaveProperty('error', 'Cast to ObjectId failed for value "1" (type string) at path "_id" for model "Book"');
+      expect(response.body).toHaveProperty('error', 'Cast to ObjectId failed for value \"1\" (type string) at path \"_id\" for model \"Book\"');
     });
 
     // Delete a book
@@ -215,6 +204,6 @@ describe('Books Endpoints', () => {
       const response = await request(app).delete('/libros/1').set('Authorization', `Bearer ${token}`);
 
       expect(response.status).toBe(400);
-      expect(response.body).toHaveProperty('error', 'Cast to ObjectId failed for value "1" (type string) at path "_id" for model "Book"');
+      expect(response.body).toHaveProperty('error', 'Cast to ObjectId failed for value \"1\" (type string) at path \"_id\" for model \"Book\"');
     });
 });
