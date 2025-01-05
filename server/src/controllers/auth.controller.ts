@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import Usuario from '../models/user.js';
 import { MongoError } from 'mongodb';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'tu_secreto_jwt';
+const JWT_SECRET = process.env.JWT_SECRET|| 'tu_secreto_jwt';
 
 // Registro
 export const signup = async (req: Request, res: Response) => {
