@@ -85,6 +85,18 @@ export const UserLibraryPage: React.FC = () => {
   const [selectedGenre, setSelectedGenre] = useState<string>("");
   const [hasShadow, setHasShadow] = useState(false);
 
+    // Detectar scroll y actualizar el estado
+    useEffect(() => {
+      const handleScroll = () => {
+        setHasShadow(window.scrollY > 0);
+      };
+  
+      window.addEventListener("scroll", handleScroll);
+      return () => {
+        window.removeEventListener("scroll", handleScroll);
+      };
+    }, []);
+
   useEffect(() => {
     const fetchUserBooks = async () => {
       const token = localStorage.getItem("token");
@@ -119,16 +131,41 @@ export const UserLibraryPage: React.FC = () => {
     fetchUserBooks();
   }, [navigate]);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setHasShadow(window.scrollY > 0);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+  const handleDeleteBook = async (bookId: string) => {
+    const token = localStorage.getItem("token");
+  
+    if (!token) {
+      console.error("Token not found. Redirecting to Sign In...");
+      navigate("/signin");
+      return;
+    }
+  
+    try {
+      const decodedToken = jwtDecode<{ id: string }>(token || "");
+      const userId = decodedToken.id;
+      const response = await fetch(`http://localhost:4200/userbooks/`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          usuarioId: userId,
+          libroId: bookId,
+        }),
+      });
+  
+      if (!response.ok) {
+        throw new Error("Failed to delete book");
+      }
+  
+      setLibraryBooks((prevBooks) => prevBooks.filter((book) => book._id !== bookId));
+      console.log(`Book with ID ${bookId} deleted successfully.`);
+    } catch (error) {
+      console.error("Error deleting book:", error);
+    }
+  };
+  
 
   const filteredBooks = libraryBooks.filter((book) => {
     const matchesSearch = book.titulo
@@ -146,7 +183,7 @@ export const UserLibraryPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-green-100 flex">
       {/* Navbar */}
-        <nav>
+      <nav>
         {/* Navbar para pantallas grandes */}
         <div className="hidden sm:flex fixed top-0 left-0 h-screen w-16 bg-green1 text-white flex-col justify-center items-center rounded-r-xl z-50">
             <button
@@ -191,17 +228,16 @@ export const UserLibraryPage: React.FC = () => {
             </button>
         </div>
         </nav>
-
       {/* Main Content */}
       <div className="flex-grow sm:ml-16 md:ml-16">
         {/* Sticky Header with Shadow */}
-        <header
+          <header
           className={`sticky top-0 z-20 bg-green-100 transition-shadow duration-300 ${
             hasShadow ? "shadow-md" : ""
           }`}
         >
           <h1 className="text-green1 text-3xl font-bold text-center mt-2">My Library</h1>
-          <div className="flex flex-col sm:flex-row justify-between items-center px-8 py-3 space-y-4 sm:space-y-0 max-w-screen-2xl mx-auto">
+          <div className="flex flex-col sm:flex-row justify-between items-center px-4 py-3 space-y-4 sm:space-y-0 max-w-screen-2xl mx-auto">
             <input
               type="text"
               placeholder="Search by title..."
@@ -217,52 +253,63 @@ export const UserLibraryPage: React.FC = () => {
           </div>
         </header>
 
-        <main className="py-6 px-8 pb-16">
+        <main className="py-6 px-4 pb-16">
           <div className="max-w-screen-2xl mx-auto space-y-4">
             {filteredBooks.map((book) => (
               <div
-                key={book._id}
-                className="relative group flex flex-col sm:flex-row items-center sm:items-center bg-white rounded-lg shadow-md p-3 hover:scale-[103%] transition-transform duration-200 overflow-hidden"
-              >
-                {/* Overlay Blur */}
-                <div className="absolute inset-0 backdrop-blur-sm rounded-lg opacity-[0.01] group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
-
-                {/* Floating Button */}
+              key={book._id}
+              className="relative group flex flex-col sm:flex-row items-center bg-white rounded-lg shadow-md p-3 hover:scale-[103%] transition-transform duration-200 overflow-hidden"
+            >
+              {/* Overlay Blur */}
+              <div className="absolute inset-0 backdrop-blur-sm rounded-lg opacity-[0.01] group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+            
+              {/* Botones centrados */}
+              <div className="absolute inset-0 flex flex-col sm:flex-row justify-center items-center gap-4 opacity-[0.001] group-hover:opacity-100 transition-opacity duration-300">
                 <button
                   onClick={(e) => {
-                    e.stopPropagation(); // Evita que el evento haga clic en la tarjeta
+                    e.stopPropagation();
                     navigate(`/library/${book._id}`);
                   }}
-                  className="absolute inset-0 flex items-center justify-center bg-transparent opacity-[0.01] group-hover:opacity-100 transition-opacity duration-300"
+                  className="bg-green1 text-white px-6 py-2 rounded-lg font-bold text-md hover:bg-green2"
                 >
-                  <div className="bg-green1 text-white px-6 py-2 rounded-lg font-bold text-md hover:bg-green2">
-                    Visualize Progress
-                  </div>
+                  Visualize Progress
                 </button>
-
-                {/* Content */}
-                <img
-                  src={book.portada}
-                  alt={`${book.titulo} cover`}
-                  className="w-full sm:w-40 h-auto object-cover rounded-md sm:mb-0"
-                />
-
-                <div className="w-150 sm:ml-4 flex flex-col items-start sm:text-left">
-                  <h2 className="text-xl sm:text-2xl font-bold mb-2">{book.titulo}</h2>
-                  <p className="text-sm sm:text-lg text-gray-700 mb-1">
-                    <strong>Author:</strong> {book.autor}
-                  </p>
-                  <p className="text-sm sm:text-lg text-gray-700 mb-1">
-                    <strong>Genre:</strong> {book.genero}
-                  </p>
-                  <p className="text-sm sm:text-lg text-gray-700 mb-1">
-                    <strong>Pages:</strong> {book.paginas}
-                  </p>
-                  <p className="text-sm sm:text-lg text-gray-700 mb-1">
-                    <strong>Synopsis:</strong> {book.sinopsis}
-                  </p>
-                </div>
+            
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDeleteBook(book._id);
+                  }}
+                  className="bg-red-600 text-white px-6 py-2 rounded-lg font-bold text-md hover:bg-red-700"
+                >
+                  Delete Book
+                </button>
               </div>
+            
+              {/* Content */}
+              <img
+                src={book.portada}
+                alt={`${book.titulo} cover`}
+                className="w-full sm:w-40 h-auto object-cover rounded-md sm:mb-0"
+              />
+            
+              <div className="w-150 sm:ml-4 flex flex-col items-start sm:text-left">
+                <h2 className="text-xl sm:text-2xl font-bold mb-2">{book.titulo}</h2>
+                <p className="text-sm sm:text-lg text-gray-700 mb-1">
+                  <strong>Author:</strong> {book.autor}
+                </p>
+                <p className="text-sm sm:text-lg text-gray-700 mb-1">
+                  <strong>Genre:</strong> {book.genero}
+                </p>
+                <p className="text-sm sm:text-lg text-gray-700 mb-1">
+                  <strong>Pages:</strong> {book.paginas}
+                </p>
+                <p className="text-sm sm:text-lg text-gray-700 mb-1">
+                  <strong>Synopsis:</strong> {book.sinopsis}
+                </p>
+              </div>
+            </div>
+            
             ))}
           </div>
         </main>
@@ -272,3 +319,4 @@ export const UserLibraryPage: React.FC = () => {
 };
 
 export default UserLibraryPage;
+
