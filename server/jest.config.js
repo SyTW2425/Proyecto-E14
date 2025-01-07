@@ -14,6 +14,7 @@ export default {
   collectCoverageFrom: [
     'src/**/*.ts', // Incluye todos los archivos TypeScript en el directorio src
     '!src/index.ts', // Excluye archivos no relevantes, como el punto de entrada
+    '!src/middlewares/*.ts', // Excluye middlewares
   ],
   testTimeout: 120000, // Tiempo máximo de espera para pruebas
 };

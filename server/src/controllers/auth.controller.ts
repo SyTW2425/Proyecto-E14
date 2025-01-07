@@ -65,25 +65,3 @@ export const signin = async (req: Request, res: Response) => {
     res.status(500).json({ error: (error as Error).message });
   }
 };
-
-
-// Inicio de sesión
-// export const signin = async (req: Request, res: Response) => {
-//   try {
-//     const { correo, password } = req.body;
-
-//     const usuario = await Usuario.findOne({ correo });
-//     if (!usuario) return res.status(404).json({ error: 'User not found' });
-
-//     const isMatch = await usuario.comparePassword(password);
-//     if (!isMatch) return res.status(400).json({ error: 'Incorrect password' });
-
-//     const token = jwt.sign({ id: usuario._id }, JWT_SECRET, {
-//       expiresIn: '1h',
-//     });
-
-//     res.status(200).json({ message: 'Successful login', token });
-//   } catch (error) {
-//     res.status(500).json({ error: (error as Error).message });
-//   }
-// };
