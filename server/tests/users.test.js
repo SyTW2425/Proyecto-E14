@@ -220,6 +220,22 @@ describe('Users Endpoints', () => {
         expect(res.body).toHaveProperty('error', 'User not found');
       });
 
+      it('should return 500 if internal error occurs while deleting a user', async () => {
+        // Simula un error en findByIdAndDelete
+        jest.spyOn(Usuario, 'findByIdAndDelete').mockRejectedValueOnce(new Error('Database error'));
+    
+        const res = await request(app)
+            .delete(`/usuarios/${mockUser2Id}`)
+            .set('Authorization', `Bearer ${token}`);
+    
+        expect(res.status).toBe(500);
+        expect(res.body).toHaveProperty('error', 'Database error');
+    
+        // Restaura el método original después del test
+        Usuario.findByIdAndDelete.mockRestore();
+    });
+    
+
     //   it('should update user reading preferences', async () => {
     //     const updatedPreferences = { preferenciasLectura: ['Science Fiction', 'Drama'] };
     

@@ -1,7 +1,8 @@
 import request from 'supertest';
 import mongoose from 'mongoose';
 import app from '../src/index';
-import { describe, it, expect, beforeAll, afterAll } from '@jest/globals';
+import { describe, it, expect, beforeAll, afterAll, jest } from '@jest/globals';
+import Usuario from '../src/models/user'; // Import the Usuario model
 
 describe('Auth Endpoints', () => {
   beforeAll(async () => {
@@ -57,6 +58,26 @@ describe('Auth Endpoints', () => {
         'The correo is taken. Please, choose another.',
       );
     });
+
+    it('should return 500 if an internal error occurs during signup', async () => {
+      // Mock de Usuario.save para lanzar un error
+      jest.spyOn(Usuario.prototype, 'save').mockRejectedValueOnce(new Error('Database error'));
+  
+      const mockUser = {
+        username: 'erroruser',
+        correo: 'erroruser@example.com',
+        preferenciasLectura: ['Drama'],
+        password: 'password123',
+      };
+  
+      const response = await request(app).post('/auth/signup').send(mockUser);
+  
+      expect(response.status).toBe(500);
+      expect(response.body).toHaveProperty('error', 'Database error');
+  
+      // Restaurar el mock después del test
+      Usuario.prototype.save.mockRestore();
+    });
   });
 
   describe('POST /auth/signin', () => {
@@ -98,5 +119,23 @@ describe('Auth Endpoints', () => {
       expect(response.status).toBe(400);
       expect(response.body).toHaveProperty('error', 'Incorrect password');
     });
-  });
+
+    it('should return 500 if an internal error occurs during signin', async () => {
+      // Mock de Usuario.findOne para lanzar un error
+      jest.spyOn(Usuario, 'findOne').mockRejectedValueOnce(new Error('Database error'));
+  
+      const loginData = {
+        correo: 'testuser@example.com',
+        password: 'password123',
+      };
+  
+      const response = await request(app).post('/auth/signin').send(loginData);
+  
+      expect(response.status).toBe(500);
+      expect(response.body).toHaveProperty('error', 'Database error');
+  
+      // Restaurar el mock después del test
+      Usuario.findOne.mockRestore();
+    });
+  });  
 });

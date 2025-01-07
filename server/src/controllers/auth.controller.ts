@@ -32,7 +32,7 @@ export const signup = async (req: Request, res: Response) => {
         error: `The ${field} is taken. Please, choose another.`,
       });
     } else {
-      res.status(400).json({ error: (error as Error).message });
+      res.status(500).json({ error: (error as Error).message });
     }
   }
 };
