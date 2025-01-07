@@ -72,6 +72,10 @@ export const changePassword = async (req: Request, res: Response) => {
     const { id } = req.params; // ID del usuario
     const { currentPassword, newPassword } = req.body;
 
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ error: 'Missing password fields' });
+    }
+    
     const user = await Usuario.findById(id);
     if (!user) {
       return res.status(404).json({ error: "User not found" });

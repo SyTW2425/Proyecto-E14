@@ -174,18 +174,6 @@ describe('Users Endpoints', () => {
         expect(res.body).toHaveProperty('error', 'User not found');
     });
 
-    // it('should update user reading preferences', async () => {
-    //     const updatedPreferences = { preferenciasLectura: ['Science Fiction', 'Drama'] };
-
-    //     const res = await request(app)
-    //         .put(`/usuarios/${mockUser2Id}/preferences`)
-    //         .set('Authorization', `Bearer ${token}`)
-    //         .send(updatedPreferences);
-
-    //     expect(res.status).toBe(200);
-    //     expect(res.body).toHaveProperty('preferenciasLectura', ['Science Fiction', 'Drama']);
-    // });
-
     it('should return 404 if user not found while updating preferences', async () => {
         const fakeId = new mongoose.Types.ObjectId();
         const updatedPreferences = { preferenciasLectura: ['Thriller'] };
@@ -198,29 +186,6 @@ describe('Users Endpoints', () => {
         expect(res.status).toBe(404);
         expect(res.body).toHaveProperty('error', 'User not found');
     });
-
-    // it('should change user password successfully', async () => {
-    //     const passwordData = {
-    //         currentPassword: 'password123',
-    //         newPassword: 'newPassword456',
-    //     };
-
-    //     const res = await request(app)
-    //         .put(`/usuarios/${mockUser2Id}/password`)
-    //         .set('Authorization', `Bearer ${token}`)
-    //         .send(passwordData);
-
-    //     expect(res.status).toBe(200);
-    //     expect(res.body).toHaveProperty('message', 'Password updated successfully');
-
-    //     const loginRes = await request(app).post('/auth/signin').send({
-    //         correo: mockUser2.correo,
-    //         password: 'newPassword456',
-    //     });
-
-    //     expect(loginRes.status).toBe(200);
-    //     expect(loginRes.body).toHaveProperty('token');
-    // });
 
     it('should return 404 if user not found while changing password', async () => {
         const fakeId = new mongoose.Types.ObjectId();
@@ -254,5 +219,100 @@ describe('Users Endpoints', () => {
         expect(res.status).toBe(404);
         expect(res.body).toHaveProperty('error', 'User not found');
       });
+
+    //   it('should update user reading preferences', async () => {
+    //     const updatedPreferences = { preferenciasLectura: ['Science Fiction', 'Drama'] };
+    
+    //     const res = await request(app)
+    //         .put(`/usuarios/${mockUser2Id}/preferences`)
+    //         .set('Authorization', `Bearer ${token}`)
+    //         .send(updatedPreferences);
+    
+    //     expect(res.status).toBe(200);
+    //     expect(res.body).toHaveProperty('preferenciasLectura', ['Science Fiction', 'Drama']);
+    // });
+    
+    it('should return 400 if invalid preferences are sent', async () => {
+        const invalidPreferences = { preferenciasLectura: ['InvalidGenre'] };
+    
+        const res = await request(app)
+            .put(`/usuarios/${mockUser2Id}/preferences`)
+            .set('Authorization', `Bearer ${token}`)
+            .send(invalidPreferences);
+    
+        expect(res.status).toBe(400);
+        expect(res.body).toHaveProperty('error');
+    });
+    
+    // it('should change user password successfully', async () => {
+    //     const passwordData = {
+    //         currentPassword: 'password123',
+    //         newPassword: 'newPassword456',
+    //     };
+    
+    //     const res = await request(app)
+    //         .put(`/usuarios/${mockUser2Id}/password`)
+    //         .set('Authorization', `Bearer ${token}`)
+    //         .send(passwordData);
+    
+    //     expect(res.status).toBe(200);
+    //     expect(res.body).toHaveProperty('message', 'Password updated successfully');
+    
+    //     // Verify login with the new password
+    //     const loginRes = await request(app).post('/auth/signin').send({
+    //         correo: mockUser2.correo,
+    //         password: 'newPassword456',
+    //     });
+    
+    //     expect(loginRes.status).toBe(200);
+    //     expect(loginRes.body).toHaveProperty('token');
+    // });
+    
+    it('should return 404 if user not found while changing password', async () => {
+        const fakeId = new mongoose.Types.ObjectId();
+        const passwordData = {
+            currentPassword: 'password123',
+            newPassword: 'newPassword456',
+        };
+
+        const res = await request(app)
+            .put(`/usuarios/${fakeId}/password`)
+            .set('Authorization', `Bearer ${token}`)
+            .send(passwordData);
+
+        expect(res.status).toBe(404);
+        expect(res.body).toHaveProperty('error', 'User not found');
+    });
+    
+    it('should return 400 if new password is invalid', async () => {
+        const passwordData = {
+            currentPassword: 'password123',
+            newPassword: '',
+        };
+    
+        const res = await request(app)
+            .put(`/usuarios/${mockUser2Id}/password`)
+            .set('Authorization', `Bearer ${token}`)
+            .send(passwordData);
+    
+        expect(res.status).toBe(400);
+        expect(res.body).toHaveProperty('error');
+    });
+
+    // it('should return 400 if current password is incorrect', async () => {
+    //     const passwordData = {
+    //         currentPassword: 'wrongPassword',
+    //         newPassword: 'newPassword456',
+    //     };
+
+    //     const res = await request(app)
+    //         .put(`/usuarios/${mockUser2Id}/password`)
+    //         .set('Authorization', `Bearer ${token}`)
+    //         .send(passwordData);
+
+    //     expect(res.status).toBe(400);
+    //     expect(res.body).toHaveProperty('error');
+    // });
+    
       
 });
