@@ -68,17 +68,68 @@ export const BookProgressPage: React.FC = () => {
     fetchBookDetails();
   }, [id, navigate]);
 
+  // const updateProgressInBackend = async (page: number) => {
+  //   const token = localStorage.getItem("token");
+  //   const usuarioId = localStorage.getItem("usuarioId");
+
+  //   if (!token || !usuarioId) {
+  //     showError("Authentication error: Token or User ID not found.");
+  //     return;
+  //   }
+
+  //   try {
+  //     setIsLoading(true);
+  //     const response = await fetch("http://localhost:4200/userbooks/progress", {
+  //       method: "PATCH",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //       body: JSON.stringify({
+  //         usuarioId,
+  //         libroId: id,
+  //         paginasLeidas: page,
+  //         totalPaginas: book?.paginas,
+  //       }),
+  //     });
+
+  //     if (!response.ok) {
+  //       throw new Error("Failed to update progress");
+  //     }
+
+  //     const updatedDetails = await response.json();
+  //     setCurrentPage(updatedDetails.userBook.paginasLeidas || 0);
+  //     setCurrentPageInput(updatedDetails.userBook.paginasLeidas.toString());
+  //     setError(null);
+  //   } catch (err) {
+  //     showError("Error updating progress. Please try again.");
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+
   const updateProgressInBackend = async (page: number) => {
     const token = localStorage.getItem("token");
     const usuarioId = localStorage.getItem("usuarioId");
-
+  
     if (!token || !usuarioId) {
       showError("Authentication error: Token or User ID not found.");
       return;
     }
-
+  
+    // Determinar el estado de lectura
+    const determineReadingStatus = (): string => {
+      if (page === 0) return "Pending";
+      if (page === book?.paginas) return "Completed";
+      return "Reading";
+    };
+  
+    const estadoLectura = determineReadingStatus();
+  
     try {
       setIsLoading(true);
+  
+      // Actualizar progreso y estado en el backend
       const response = await fetch("http://localhost:4200/userbooks/progress", {
         method: "PATCH",
         headers: {
@@ -90,23 +141,25 @@ export const BookProgressPage: React.FC = () => {
           libroId: id,
           paginasLeidas: page,
           totalPaginas: book?.paginas,
+          estadoLectura, // Incluimos el estado de lectura
         }),
       });
-
+  
       if (!response.ok) {
-        throw new Error("Failed to update progress");
+        throw new Error("Failed to update progress and reading status");
       }
-
+  
       const updatedDetails = await response.json();
       setCurrentPage(updatedDetails.userBook.paginasLeidas || 0);
       setCurrentPageInput(updatedDetails.userBook.paginasLeidas.toString());
       setError(null);
     } catch (err) {
-      showError("Error updating progress. Please try again.");
+      showError("Error updating progress and reading status. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
+  
 
   const handlePageInputKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
@@ -237,7 +290,7 @@ export const BookProgressPage: React.FC = () => {
   const getReadingStatus = (): string => {
     if (currentPage === 0) return "Pending";
     if (currentPage === book?.paginas) return "Completed";
-    return "In Progress";
+    return "Reading";
   };
 
   const showError = (message: string) => {

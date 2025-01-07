@@ -1,7 +1,12 @@
 import React, { useState } from "react";
+import { useEffect } from "react";
 
 export default function LandingPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+    useEffect(() => {
+      document.title = "Bookies."; // Cambia el título de la pestaña
+  }, []);
   
   return (
     <div className="font-roboto text-gray-900">
@@ -929,4 +934,4 @@ export default function LandingPage() {
       </footer>
     </div>
   );
-}
+};

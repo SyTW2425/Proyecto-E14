@@ -27,6 +27,10 @@ export const SignUp: React.FC = () => {
   >("");
   const [dropdownVisible, setDropdownVisible] = useState(false);
 
+    useEffect(() => {
+      document.title = "Sign Up"; // Cambia el título de la pestaña
+  }, []);
+
   // Fetch genres from the backend
   useEffect(() => {
     const fetchGenres = async () => {

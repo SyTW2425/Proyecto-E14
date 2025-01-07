@@ -43,6 +43,10 @@ const FilterDropdown: React.FC<{
     };
   }, []);
 
+    useEffect(() => {
+      document.title = "Book Searching"; // Cambia el título de la pestaña
+  }, []);
+
   return (
     <div
       ref={dropdownRef}

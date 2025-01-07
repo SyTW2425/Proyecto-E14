@@ -1,6 +1,6 @@
 import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
-import counterReducer from "../components/counter/counterSlice";
-import booksReducer from "../components/books/booksSlice";
+import counterReducer from "../slices/counter/counterSlice";
+import booksReducer from "../slices/books/booksSlice";
 //import signUpReducer from "../components/signUpIn/signUpSlice";
 import sessionReducer from "../slices/sessionSlice";
 

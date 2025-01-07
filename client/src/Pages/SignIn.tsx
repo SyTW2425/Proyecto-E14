@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setSession } from "../slices/sessionSlice";
 import { AppDispatch } from "../redux/store";
+import { useEffect } from "react";
 
 const BACKEND_LOGIN_URL = `${process.env.REACT_APP_BACKEND_URL}/auth/signin`;
 const LOCAL_STORAGE_NAME = process.env.REACT_APP_LOCAL_STORAGE_NAME || "token";
@@ -15,6 +16,10 @@ export const SignIn: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+
+    useEffect(() => {
+      document.title = "Sign In"; // Cambia el título de la pestaña
+  }, []);
 
   const validateInputs = () => {
     if (!email.trim()) {

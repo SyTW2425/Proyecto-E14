@@ -233,7 +233,7 @@ describe('UserBook Endpoints', () => {
 				totalPaginas: 300,
 			});
 		expect(res3.statusCode).toEqual(404);
-		expect(res3.body).toEqual({ error: 'Book not found in user library' });
+		expect(res3.body).toEqual({ error: 'Book not found in users library' });
   });
 
 	it('should return 500 Internal Server Error when an exception occurs updating the pages read and progress', async () => {
@@ -253,7 +253,7 @@ describe('UserBook Endpoints', () => {
       });
 
     expect(res.statusCode).toEqual(500);
-    expect(res.body).toEqual({ error: 'Internal Server Error' });
+    expect(res.body).toEqual({ error: 'Forced database error' });
 
     // Restaurar implementación original
     mongoose.Model.findOneAndUpdate.mockRestore();
@@ -292,7 +292,7 @@ describe('UserBook Endpoints', () => {
 				estadoLectura: 'Completed',
 			});
 		expect(res.statusCode).toEqual(404);
-		expect(res.body).toEqual({ error: 'Book not found in user library' });
+		expect(res.body).toEqual({ error: 'Book not found in users library' });
 	});
 
 

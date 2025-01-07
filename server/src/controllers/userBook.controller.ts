@@ -21,42 +21,109 @@ export const addUserBook = async (req: Request, res: Response) => {
   }
 };
 
+// // Update reading progress
+// export const updatePagesRead = async (req: Request, res: Response) => {
+//   try {
+//     const { usuarioId, libroId, paginasLeidas, totalPaginas } = req.body;
+
+//     // Validación de parámetros
+//     if (!usuarioId || !libroId || totalPaginas == null || paginasLeidas == null) {
+//       return res.status(400).json({
+//         error: "Missing required fields: usuarioId, libroId, paginasLeidas, or totalPaginas",
+//       });
+//     }
+
+//     if (paginasLeidas < 0 || paginasLeidas > totalPaginas) {
+//       return res.status(400).json({
+//         error: "Pages read must be between 0 and the total number of pages",
+//       });
+//     }
+
+//     // Calcular el progreso
+//     const progreso = totalPaginas > 0 ? (paginasLeidas / totalPaginas) * 100 : 0;
+
+//     // Actualizar el progreso en la base de datos
+//     const userBook = await UserBook.findOneAndUpdate(
+//       { usuarioId, libroId },
+//       { paginasLeidas, progreso },
+//       { new: true }
+//     );
+
+//     if (!userBook) {
+//       return res.status(404).json({ error: "Book not found in user library" });
+//     }
+
+//     res.status(200).json({ message: "Pages read and progress updated", userBook });
+//   } catch (error) {
+//     console.error("Error in updatePagesRead:", error);
+//     res.status(500).json({ error: "Internal Server Error" });
+//   }
+// };
+
+
+// // Update reading status
+// export const updateReadingStatus = async (req: Request, res: Response) => {
+//   try {
+//     const { usuarioId, libroId, estadoLectura } = req.body;
+
+//     const userBook = await UserBook.findOneAndUpdate(
+//       { usuarioId, libroId },
+//       { estadoLectura },
+//       { new: true },
+//     );
+
+//     if (!userBook) {
+//       return res.status(404).json({ error: 'Book not found in user library' });
+//     }
+
+//     res.status(200).json({ message: 'Reading status updated', userBook });
+//   } catch (error) {
+//     res.status(500).json({ error: (error as Error).message });
+//   }
+// };
+
 // Update reading progress
 export const updatePagesRead = async (req: Request, res: Response) => {
   try {
     const { usuarioId, libroId, paginasLeidas, totalPaginas } = req.body;
 
-    // Validación de parámetros
+    // Validación de parámetros requeridos
     if (!usuarioId || !libroId || totalPaginas == null || paginasLeidas == null) {
       return res.status(400).json({
         error: "Missing required fields: usuarioId, libroId, paginasLeidas, or totalPaginas",
       });
     }
 
+    // Validación de rango de páginas leídas
     if (paginasLeidas < 0 || paginasLeidas > totalPaginas) {
       return res.status(400).json({
         error: "Pages read must be between 0 and the total number of pages",
       });
     }
 
-    // Calcular el progreso
+    // Calcular progreso y estado de lectura
     const progreso = totalPaginas > 0 ? (paginasLeidas / totalPaginas) * 100 : 0;
+    const estadoLectura =
+      paginasLeidas === 0
+        ? "Pending"
+        : paginasLeidas === totalPaginas
+        ? "Completed"
+        : "Reading";
 
-    // Actualizar el progreso en la base de datos
+    // Actualizar el libro del usuario
     const userBook = await UserBook.findOneAndUpdate(
       { usuarioId, libroId },
-      { paginasLeidas, progreso },
+      { paginasLeidas, progreso, estadoLectura },
       { new: true }
     );
 
     if (!userBook) {
-      return res.status(404).json({ error: "Book not found in user library" });
+      return res.status(404).json({ error: "Book not found in users library" });
     }
 
     res.status(200).json({ message: "Pages read and progress updated", userBook });
   } catch (error) {
-    console.error("Error in updatePagesRead:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ error: (error as Error).message });
   }
 };
 
@@ -66,21 +133,26 @@ export const updateReadingStatus = async (req: Request, res: Response) => {
   try {
     const { usuarioId, libroId, estadoLectura } = req.body;
 
+    if (!usuarioId || !libroId || !estadoLectura) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
     const userBook = await UserBook.findOneAndUpdate(
       { usuarioId, libroId },
       { estadoLectura },
-      { new: true },
+      { new: true } // Devuelve el documento actualizado
     );
 
     if (!userBook) {
-      return res.status(404).json({ error: 'Book not found in user library' });
+      return res.status(404).json({ error: "Book not found in users library" });
     }
 
-    res.status(200).json({ message: 'Reading status updated', userBook });
+    res.status(200).json({ message: "Reading status updated", userBook });
   } catch (error) {
     res.status(500).json({ error: (error as Error).message });
   }
 };
+
 
 // Add a note to a book
 export const addNote = async (req: Request, res: Response) => {

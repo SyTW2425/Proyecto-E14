@@ -35,6 +35,10 @@ const UserProfilePage: React.FC = () => {
   const dropdownButtonRef = useRef<HTMLButtonElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+    useEffect(() => {
+      document.title = "Profile"; // Cambia el título de la pestaña
+  }, []);
+
   useEffect(() => {
     const fetchUserDetails = async () => {
       const token = localStorage.getItem("token");
@@ -237,6 +241,7 @@ const UserProfilePage: React.FC = () => {
     // Redirect to the sign-in page
     navigate("/signin");
   };
+
 
   return (
     <div className="flex bg-green-100 min-h-screen overflow-hidden">
