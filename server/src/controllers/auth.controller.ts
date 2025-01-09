@@ -45,7 +45,7 @@ export const signin = async (req: Request, res: Response) => {
     if (!usuario) return res.status(404).json({ error: 'User not found' });
 
     const isMatch = await usuario.comparePassword(password);
-    if (!isMatch) return res.status(400).json({ error: 'Incorrect password' });
+    if (!isMatch) return res.status(400).json({ error: 'Incorrect password. Please try again' });
 
     const token = jwt.sign({ id: usuario._id }, JWT_SECRET, {
       expiresIn: '1h',

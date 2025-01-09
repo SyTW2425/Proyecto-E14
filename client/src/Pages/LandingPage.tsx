@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
+import LandingImg from "../img/LANDING_2.png";
 
 export default function LandingPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -110,14 +111,14 @@ export default function LandingPage() {
         id="hero"
       >
         <div className="container mx-auto px-6 text-center -mb-24">
-          <h2 className="text-6xl font-bold mb-9 text-green1 -mt-24">
+          <h2 className="text-6xl font-bold mb-9 text-green1 -mt-32">
             Welcome to <span className="text-orange-300">Bookies.</span>
           </h2>
           <div className="flex justify-center items-center">
             <img
-              src="https://i.pinimg.com/originals/6a/c5/e8/6ac5e88f1a042fc5e8a1ca4cf023be22.jpg"
+              src={LandingImg}
               alt="Bookies Hero"
-              className="rounded-lg shadow-lg w-3/5 max-w2xl"
+              className="rounded-lg shadow-lg w-4/5 max-w2xl"
             />
           </div>
           {/* <p className="text-xl mt-8 font-medium text-white mb-8">

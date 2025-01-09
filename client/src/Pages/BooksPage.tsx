@@ -119,15 +119,15 @@ export const BooksPage: React.FC = () => {
         } else {
           setErrorMessage("Failed to add book. Please try again.");
         }
-        setTimeout(() => setErrorMessage(null), 5000); // Hide error after 5 seconds
+        setTimeout(() => setErrorMessage(null), 3000); // Hide error after 5 seconds
       } else {
         setSuccessMessage("Book added to library successfully!");
-        setTimeout(() => setSuccessMessage(null), 5000); // Hide success after 5 seconds
+        setTimeout(() => setSuccessMessage(null), 3000); // Hide success after 5 seconds
       }
     } catch (error) {
       console.error("Error adding book to library:", error);
       setErrorMessage("An unexpected error occurred. Please try again.");
-      setTimeout(() => setErrorMessage(null), 5000);
+      setTimeout(() => setErrorMessage(null), 3000);
     }
   };
 
@@ -135,6 +135,13 @@ export const BooksPage: React.FC = () => {
     const fetchBooks = async () => {
       try {
         const token = localStorage.getItem("token");
+
+        if (!token) {
+          console.error("User is not authenticated");
+          navigate("/signin");
+          return;
+        }
+
         const response = await fetch("http://localhost:4200/libros", {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -153,7 +160,7 @@ export const BooksPage: React.FC = () => {
     };
 
     fetchBooks();
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     const handleScroll = () => {

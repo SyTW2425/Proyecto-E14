@@ -123,7 +123,12 @@ export const UserLibraryPage: React.FC = () => {
         });
   
         if (!response.ok) {
-          throw new Error("Failed to fetch user books");
+          if (response.status === 403) {
+            navigate("/signin");
+          } else {
+            throw new Error("Failed to fetch user books.");
+          }
+          return;
         }
   
         const data = await response.json();
@@ -239,7 +244,7 @@ export const UserLibraryPage: React.FC = () => {
             <FaUser size={24} />
             </button>
         </div>
-      </nav>
+    </nav>
       {/* Main Content */}
       <div className="flex-grow sm:ml-16 md:ml-16">
         {/* Sticky Header with Shadow */}
