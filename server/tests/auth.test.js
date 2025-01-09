@@ -117,7 +117,7 @@ describe('Auth Endpoints', () => {
       const response = await request(app).post('/auth/signin').send(loginData);
 
       expect(response.status).toBe(400);
-      expect(response.body).toHaveProperty('error', 'Incorrect password');
+      expect(response.body).toHaveProperty('error', 'Incorrect password. Please try again');
     });
 
     it('should return 500 if an internal error occurs during signin', async () => {
